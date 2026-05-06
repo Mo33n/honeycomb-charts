@@ -1,0 +1,58 @@
+name: Bug report
+description: Something isn’t working as expected
+title: "[Bug] "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report this. The more concrete the report, the faster we can help.
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: What happened?
+      description: Describe the incorrect behavior in plain language.
+      placeholder: e.g. Autoswitch never leaves the candle-only layout when I zoom in…
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect?
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      description: Numbered steps, or “clone repo, run these commands…”.
+      placeholder: |
+        1.
+        2.
+        3.
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: OS, browser, Node version, Honeycomb commit or version if you know it.
+      placeholder: |
+        - OS:
+        - Browser:
+        - Node:
+        - Commit / version:
+    validations:
+      required: false
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs, screenshots, or minimal sample
+      description: Console errors, a short screen recording, or the smallest config/data snippet that shows the issue.
+    validations:
+      required: false
