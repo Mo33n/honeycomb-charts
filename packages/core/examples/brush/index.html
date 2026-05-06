@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>honeycomb-charts — brush reducers (v1.2)</title>
+		<style>
+			body {
+				margin: 0;
+				font-family: system-ui, sans-serif;
+				background: #131722;
+				color: #d1d4dc;
+			}
+			#wrap {
+				padding: 12px;
+				display: flex;
+				flex-direction: column;
+				gap: 12px;
+				height: 100vh;
+				box-sizing: border-box;
+			}
+			#chart {
+				flex: 1;
+				min-height: 200px;
+			}
+			#panel {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 8px;
+				align-items: center;
+			}
+			button {
+				padding: 6px 12px;
+				cursor: pointer;
+			}
+			#out {
+				font-family: ui-monospace, monospace;
+				font-size: 12px;
+				white-space: pre-wrap;
+				background: #1e222d;
+				padding: 8px;
+				border-radius: 4px;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="wrap">
+			<p style="margin: 0">
+				<strong>HC2-012 brush demo.</strong> Uses <code>filterBarsByFootprintBrush</code> +
+				<code>runFootprintBrushReducers</code> — see package <code>docs/brush-reducers-v1.2.md</code>.
+			</p>
+			<div id="chart"></div>
+			<div id="panel">
+				<button type="button" data-brush="single">Brush: single bar (t₀)</button>
+				<button type="button" data-brush="two">Brush: two bars (t₀–t₁)</button>
+				<button type="button" data-brush="whitespace">
+					Brush: t₀–t₂ (includes empty-levels bar @ t₁)
+				</button>
+			</div>
+			<div id="out"></div>
+		</div>
+		<script type="module" src="./main.ts"></script>
+	</body>
+</html>

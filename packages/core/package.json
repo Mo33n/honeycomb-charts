@@ -1,0 +1,92 @@
+{
+	"name": "@honeycomb/charts",
+	"version": "0.1.0",
+	"description": "Honeycomb runtime library for footprint and generic footprint rendering on Lightweight Charts.",
+	"license": "Apache-2.0",
+	"type": "module",
+	"sideEffects": false,
+	"main": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js"
+		}
+	},
+	"files": [
+		"dist",
+		"README.md",
+		"BUILDING-HONEYCOMB.md",
+		"CHANGELOG.md",
+		"docs/release-checklist.md",
+		"docs/partial-updates-v1.1.md",
+		"docs/rule-colors-v1.1.md",
+		"docs/lod-v1.1.md",
+		"docs/qa-footprint-v1.1.md",
+		"docs/brush-reducers-v1.2.md",
+		"docs/correction-flash-v1.2.md",
+		"docs/qa-footprint-v1.2.md",
+		"docs/session-bands-v1.2.md",
+		"docs/presets-v1.2.md",
+		"docs/linked-charts-v1.2.md",
+		"docs/replay-mode-v2.md",
+		"docs/ghost-overlay-v2.md",
+		"docs/poc-va-host-contract.md",
+		"docs/core-promotion-footprint.md"
+	],
+	"scripts": {
+		"build": "tsc -p tsconfig.build.json",
+		"clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\"",
+		"lint": "eslint --format=unix \"src/**/*.ts\" \"tests/**/*.ts\" \"scripts/**/*.ts\" \"examples/**/*.ts\"",
+		"test": "node --import tsx/esm --test \"tests/**/*.spec.ts\"",
+		"perf": "node --import tsx/esm ./scripts/footprint-bench.ts",
+		"test:e2e": "node --import tsx/esm ./tests/e2e/run-footprint-e2e.ts",
+		"test:graphics": "node --import tsx/esm ./tests/graphics/run-baseline.ts",
+		"test:memleak": "node --import tsx/esm ./scripts/memleak-smoke.ts",
+		"verify:layout-smoke": "HC_SKIP_BROWSER_PERF=1 npm run perf",
+		"verify:all": "npm run build && npm test && npm run lint && npm run test:e2e && npm run test:e2e:replay && npm run test:graphics && npm run verify:layout-smoke && npm run pack:dry",
+		"pack:dry": "npm pack --dry-run",
+		"publish:dry": "npm publish --dry-run",
+		"examples:dev": "vite --config examples/vite.config.ts",
+		"examples:dev:pathb": "vite --config examples/path-b/vite.config.ts",
+		"examples:dev:brush": "vite --config examples/brush/vite.config.ts",
+		"examples:dev:session": "vite --config examples/session-bands/vite.config.ts",
+		"examples:dev:replay": "vite --config examples/replay/vite.config.ts",
+		"examples:dev:static": "vite --config examples/static-dataset/vite.config.ts",
+		"examples:dev:canvas": "vite --config examples/custom-canvas/vite.config.ts",
+		"examples:dev:generic-footprint": "vite --config examples/generic-footprint/vite.config.ts",
+		"examples:build:replay": "vite build --config examples/replay/vite.config.ts",
+		"test:e2e:replay": "node --import tsx/esm ./tests/e2e/run-replay-example-e2e.ts",
+		"prepack": "npm run build"
+	},
+	"peerDependencies": {
+		"lightweight-charts": ">=5.0.0"
+	},
+	"dependencies": {
+		"fancy-canvas": "2.1.0"
+	},
+	"devDependencies": {
+		"@types/pixelmatch": "5.2.6",
+		"lightweight-charts": "^5.0.0",
+		"pixelmatch": "7.1.0",
+		"pngjs": "7.0.0",
+		"puppeteer": "24.15.0",
+		"tsx": "4.19.3",
+		"typescript": "5.5.4",
+		"vite": "7.2.0"
+	},
+	"engines": {
+		"node": ">=22.3"
+	},
+	"keywords": [
+		"lightweight-charts",
+		"footprint",
+		"order-flow",
+		"trading"
+	],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/honeycomb-charts/honeycomb.git",
+		"directory": "packages/core"
+	}
+}

@@ -1,0 +1,29 @@
+{
+	"name": "honeycomb-workspace",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"compile:layouts": "node ./compile-layout.mjs",
+		"core:build": "npm run build --prefix ./packages/core",
+		"core:test": "npm test --prefix ./packages/core",
+		"runtime:build": "npm run build --prefix ./packages/core",
+		"runtime:test": "npm test --prefix ./packages/core",
+		"generate:sample": "node ./scripts/generate-sample-data.mjs",
+		"check:sample": "node ./scripts/check-sample-vs-plan.mjs",
+		"spike:generic": "node ./scripts/spike-generic-adapter.mjs",
+		"validate:catalog": "node ./scripts/validate-catalog-schema.mjs",
+		"demo:dev": "npm install --prefix ./demo && npm run dev --prefix ./demo",
+		"perf:mutations": "node ./scripts/perf-mutations.mjs",
+		"perf:mutations:check": "node ./scripts/perf-mutations.mjs --check",
+		"loadtest:mutations": "node ./scripts/load-test-mutations.mjs",
+		"migrate:render-plan": "node ./scripts/migrate-render-plan-version.mjs",
+		"docs:dev": "npm install --prefix ./docs-site && npm run dev --prefix ./docs-site",
+		"docs:build": "npm install --prefix ./docs-site && npm run build --prefix ./docs-site",
+		"test": "node ./scripts/validate-catalog-schema.mjs && node --test ./tests/*.spec.mjs && node ./scripts/check-sample-vs-plan.mjs --all",
+		"verify:core": "npm run core:build && npm run core:test",
+		"verify:runtime": "npm run runtime:build && npm run runtime:test"
+	},
+	"devDependencies": {
+		"ajv": "^8.20.0"
+	}
+}

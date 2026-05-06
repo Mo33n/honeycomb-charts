@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "layoutDirection": "ltr",
+  "left": {
+    "columns": []
+  },
+  "right": {
+    "columns": []
+  },
+  "bodyVisible": true,
+  "wicksVisible": true,
+  "candleStyle": {
+    "wickColor": "#2fb7ff",
+    "bullWickColor": "#26a69a",
+    "bearWickColor": "#ef5350",
+    "bullBodyFill": "rgba(38,166,154,0.20)",
+    "bearBodyFill": "rgba(239,83,80,0.20)",
+    "bullBodyBorder": "#26a69a",
+    "bearBodyBorder": "#ef5350"
+  },
+  "candleZOrder": "behind",
+  "filteredBarTimeAxis": "compress",
+  "minFontPx": 8,
+  "maxFontPx": 13,
+  "minCellHeightPx": 4,
+  "lodOmitNumberGlyphs": true
+}

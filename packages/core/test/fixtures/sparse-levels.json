@@ -1,0 +1,13 @@
+[
+	{
+		"time": 1710000000,
+		"open": 50,
+		"high": 52,
+		"low": 49,
+		"close": 51,
+		"levels": [
+			{ "price": 50, "values": { "bid": 100 } },
+			{ "price": 51, "values": {} }
+		]
+	}
+]

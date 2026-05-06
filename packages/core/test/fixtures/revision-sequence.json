@@ -1,0 +1,20 @@
+[
+	{
+		"time": 1710000000,
+		"open": 10,
+		"high": 12,
+		"low": 9,
+		"close": 11,
+		"revision": 1,
+		"levels": [{ "price": 10, "values": { "bid": 1, "ask": 1, "delta": 0 } }]
+	},
+	{
+		"time": 1710000000,
+		"open": 10,
+		"high": 12,
+		"low": 9,
+		"close": 11,
+		"revision": 2,
+		"levels": [{ "price": 10, "values": { "bid": 5, "ask": 1, "delta": 4 } }]
+	}
+]

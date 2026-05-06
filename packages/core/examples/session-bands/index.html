@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>honeycomb-charts — session band overlay (v1.2)</title>
+		<style>
+			body {
+				margin: 0;
+				font-family: system-ui, sans-serif;
+				background: #131722;
+				color: #d1d4dc;
+			}
+			#wrap {
+				padding: 12px;
+				display: flex;
+				flex-direction: column;
+				gap: 8px;
+				height: 100vh;
+				box-sizing: border-box;
+			}
+			#stage {
+				position: relative;
+				flex: 1;
+				min-height: 220px;
+			}
+			#chart {
+				position: absolute;
+				inset: 0;
+			}
+			#band {
+				position: absolute;
+				top: 0;
+				bottom: 0;
+				left: 0;
+				width: 0;
+				pointer-events: none;
+				background: rgba(38, 166, 154, 0.12);
+				border-left: 1px solid rgba(38, 166, 154, 0.35);
+				border-right: 1px solid rgba(38, 166, 154, 0.35);
+			}
+		</style>
+	</head>
+	<body>
+		<div id="wrap">
+			<p style="margin: 0">
+				<strong>HC2-030</strong> — host-owned session tint via <code>timeScale().timeToCoordinate</code> + DOM overlay (see
+				<code>docs/session-bands-v1.2.md</code>). Footprint bar width unchanged.
+			</p>
+			<div id="stage">
+				<div id="chart"></div>
+				<div id="band" aria-hidden="true"></div>
+			</div>
+		</div>
+		<script type="module" src="./main.ts"></script>
+	</body>
+</html>

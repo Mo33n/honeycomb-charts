@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>honeycomb-charts — custom canvas demos</title>
+		<style>
+			html,
+			body {
+				margin: 0;
+				height: 100%;
+				background: #131722;
+				color: #d1d4dc;
+				font-family: system-ui, sans-serif;
+			}
+			body {
+				display: flex;
+				flex-direction: column;
+			}
+			#header {
+				flex-shrink: 0;
+				border-bottom: 1px solid #363a45;
+				padding: 10px 14px 12px;
+			}
+			#meta {
+				font-size: 13px;
+				color: #b2b5be;
+				margin-bottom: 8px;
+			}
+			#demo-nav {
+				font-size: 13px;
+			}
+			#demo-nav a {
+				color: #64b5f6;
+				text-decoration: none;
+			}
+			#demo-nav a:hover {
+				text-decoration: underline;
+			}
+			#demo-nav a.active {
+				color: #d1d4dc;
+				font-weight: 600;
+				pointer-events: none;
+			}
+			#demo-nav .sep {
+				color: #787b86;
+				margin: 0 4px;
+			}
+			#canvas-root {
+				flex: 1;
+				min-height: 0;
+			}
+		</style>
+	</head>
+	<body>
+		<header id="header">
+			<div id="meta"></div>
+			<nav id="demo-nav" aria-label="Canvas demos"></nav>
+		</header>
+		<div id="canvas-root" role="img" aria-label="Canvas visualization"></div>
+		<script type="module" src="./main.ts"></script>
+	</body>
+</html>

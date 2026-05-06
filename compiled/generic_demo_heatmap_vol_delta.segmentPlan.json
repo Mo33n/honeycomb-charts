@@ -1,0 +1,76 @@
+{
+  "segmentPlanVersion": 1,
+  "renderPlanVersion": "1.0.0",
+  "layoutId": "generic_demo_heatmap_vol_delta",
+  "engine": "genericFootprint",
+  "layoutRevision": 528360300,
+  "themeRef": "desk_dark",
+  "columns": [
+    {
+      "order": 0,
+      "binding": {
+        "key": "vol",
+        "scope": "level"
+      },
+      "weight": 1.2,
+      "lwcGenericFootprintSlot": {
+        "role": "heatmapCell",
+        "metricId": "vol",
+        "colorMode": "sequential"
+      },
+      "extensions": {
+        "presentation": {
+          "intent": "liquidity_intensity"
+        },
+        "columnId": "hm_vol"
+      }
+    },
+    {
+      "order": 1,
+      "binding": {
+        "key": "delta",
+        "scope": "level"
+      },
+      "weight": 1,
+      "lwcGenericFootprintSlot": {
+        "role": "number",
+        "metricId": "delta",
+        "colorBySign": true
+      }
+    }
+  ],
+  "requiredKeys": [
+    "delta",
+    "vol"
+  ],
+  "chrome": {
+    "candleStripFraction": 0.11,
+    "showPriceGrid": false,
+    "histogramShowValues": false,
+    "candleLaneVisible": true,
+    "candleLaneIndex": 2,
+    "candleInsetLeftCss": 0,
+    "candleInsetRightCss": 0,
+    "candleGapAfterCss": 0
+  },
+  "summaries": {
+    "header": [
+      {
+        "metricId": "delta",
+        "colorBySign": true
+      }
+    ]
+  },
+  "poc": {
+    "metricId": "vol"
+  },
+  "typography": {
+    "minFontPx": 8,
+    "maxFontPx": 16,
+    "minCellHeightPx": 3
+  },
+  "spacing": {
+    "barSummaryLabelGapCss": 4,
+    "barSummaryLineHeightCss": 11
+  }
+}

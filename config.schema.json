@@ -1,0 +1,346 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "https://local/honeycomb/config.schema.json",
+	"title": "Honeycomb segment layout catalog",
+	"type": "object",
+	"required": ["schemaVersion", "layouts"],
+	"properties": {
+		"$schema": { "type": "string" },
+		"schemaVersion": {
+			"type": "string",
+			"description": "Format version for this file (semver)."
+		},
+		"defaultLayoutId": {
+			"type": "string",
+			"description": "Layout id used when the host app does not specify one."
+		},
+		"renderingModel": {
+			"type": "object",
+			"description": "Documents the binding + presentation contract (see compile output segmentPlan.json)."
+		},
+		"dataContract": {
+			"type": "object",
+			"description": "Documents which value keys layouts expect on each footprint row / bar.",
+			"properties": {
+				"levelValueKeys": {
+					"type": "array",
+					"items": { "type": "string" }
+				},
+				"barAggregateKeys": {
+					"type": "array",
+					"items": { "type": "string" }
+				},
+				"aliases": {
+					"type": "object",
+					"additionalProperties": { "type": "string" }
+				}
+			}
+		},
+		"templates": {
+			"type": "object",
+			"description": "Named fragments merged into tracks at compile time (see compile-layout.mjs).",
+			"additionalProperties": { "type": "object" }
+		},
+		"themes": {
+			"type": "object",
+			"description": "Named token bundles referenced by themeRef on a layout.",
+			"additionalProperties": { "type": "object" }
+		},
+		"segmentProfiles": {
+			"type": "object",
+			"description": "Named viewport→layout rules (P2-B). Referenced by layout.segmentProfileRef; emitted as segmentPlan.profileSelector.",
+			"additionalProperties": { "$ref": "#/$defs/segmentProfile" }
+		},
+		"productGoals": {
+			"type": "object",
+			"description": "Optional PM-facing success framing (not consumed by compile-layout.mjs).",
+			"additionalProperties": { "type": "string" }
+		},
+		"layouts": {
+			"type": "array",
+			"minItems": 1,
+			"items": { "$ref": "#/$defs/layout" }
+		}
+	},
+	"$defs": {
+		"segmentProfile": {
+			"type": "object",
+			"required": ["rules"],
+			"properties": {
+				"hysteresisPx": { "type": "number", "minimum": 0 },
+				"rules": {
+					"type": "array",
+					"minItems": 1,
+					"items": {
+						"type": "object",
+						"required": ["minWidthPx", "layoutId"],
+						"properties": {
+							"minWidthPx": { "type": "number", "minimum": 0 },
+							"layoutId": { "type": "string", "minLength": 1 }
+						},
+						"additionalProperties": false
+					}
+				}
+			},
+			"additionalProperties": false
+		},
+		"cellOverlay": {
+			"type": "object",
+			"description": "Declarative per-cell overlay (ADR-0005). v1 kind: cellBand.",
+			"required": ["id", "kind", "fill"],
+			"properties": {
+				"id": { "type": "string", "minLength": 1, "pattern": "^[^|]+$" },
+				"kind": { "type": "string", "enum": ["cellBand"] },
+				"fill": { "type": "string", "minLength": 1 },
+				"opacity": { "type": "number", "minimum": 0, "maximum": 1 },
+				"zOrder": { "type": "integer" }
+			},
+			"additionalProperties": false
+		},
+		"valueBinding": {
+			"type": "object",
+			"required": ["key", "scope"],
+			"properties": {
+				"key": {
+					"type": "string",
+					"minLength": 1,
+					"description": "Field name on the incoming dataset (e.g. levels[].values[key] for scope level)."
+				},
+				"scope": {
+					"type": "string",
+					"enum": ["level", "bar"],
+					"description": "level = per price row in the segment; bar = whole-candle aggregate (future hooks)."
+				}
+			}
+		},
+		"genericTrack": {
+			"type": "object",
+			"description": "One column in left→right sequence before the mini OHLC strip (genericFootprint engine).",
+			"properties": {
+				"id": { "type": "string", "description": "Stable id for your renderer / tests." },
+				"templateRef": { "type": "string" },
+				"binding": { "$ref": "#/$defs/valueBinding" },
+				"denominatorBinding": { "$ref": "#/$defs/valueBinding" },
+				"metricId": {
+					"type": "string",
+					"description": "Legacy alias of binding.key; must match binding.key when both set."
+				},
+				"ratioDenominatorId": {
+					"type": "string",
+					"description": "Legacy alias of denominatorBinding.key for ratio role."
+				},
+				"role": { "type": "string", "enum": ["histogram", "number", "ratio", "heatmapCell", "bar", "candle"] },
+				"grow": {
+					"type": "string",
+					"enum": ["left", "right", "center"],
+					"description": "histogram: bar grows from inner right edge leftward (left), inner left edge rightward (right), or centered in the slot (center)."
+				},
+				"histogramColor": { "type": "string" },
+				"histogramMaxFillFrac": {
+					"type": "number",
+					"minimum": 0.05,
+					"maximum": 1,
+					"description": "histogram only: fraction of slot inner width used at bar-max value (default 1)."
+				},
+				"histogramLengthGamma": {
+					"type": "number",
+					"minimum": 0.25,
+					"maximum": 4,
+					"description": "histogram only: length = (|v|/barMax)^gamma after linear normalize; 1 = linear, >1 compresses mids."
+				},
+				"barAlignMode": {
+					"type": "string",
+					"enum": ["positiveLeftNegativeRight", "positiveRightNegativeLeft", "centered", "leftOnly", "rightOnly"]
+				},
+				"barPositiveColor": { "type": "string" },
+				"barNegativeColor": { "type": "string" },
+				"insetLeftCss": { "type": "number", "minimum": 0 },
+				"insetRightCss": { "type": "number", "minimum": 0 },
+				"gapAfterCss": { "type": "number", "minimum": 0 },
+				"candleStripFraction": { "type": "number" },
+				"candleWick": { "type": "string" },
+				"candleBull": { "type": "string" },
+				"candleBear": { "type": "string" },
+				"candleBullStroke": { "type": "string" },
+				"candleBearStroke": { "type": "string" },
+				"candleLaneBg": { "type": "string" },
+				"candleLaneEdge": { "type": "string" },
+				"colorizeBySign": { "type": "boolean" },
+				"colorBySign": { "type": "boolean" },
+				"cellBackground": { "type": "string" },
+				"colorMode": {
+					"type": "string",
+					"enum": ["sequential", "diverging", "valueSecondary"],
+					"description": "heatmapCell only (see ADR-0004)."
+				},
+				"heatmapColor": {
+					"type": "string",
+					"description": "heatmapCell optional base fill color; value intensity controls opacity."
+				},
+				"scaleRef": { "type": "string", "description": "heatmapCell: theme scale id (ADR-0004)." },
+				"secondaryMetricId": {
+					"type": "string",
+					"description": "heatmapCell optional second channel; required when colorMode is valueSecondary."
+				},
+				"weightBinding": {
+					"type": "object",
+					"description": "heatmapCell optional mass key for weighted normalization (ADR-0004).",
+					"required": ["key", "scope"],
+					"properties": {
+						"key": { "type": "string", "minLength": 1 },
+						"scope": { "type": "string", "enum": ["level", "bar"] }
+					}
+				},
+				"presentation": {
+					"type": "object",
+					"description": "Opaque to honeycomb-charts; forwarded in segmentPlan.extensions.presentation."
+				},
+				"overlays": {
+					"type": "array",
+					"description": "Cell overlays for this track (ADR-0005); compiled to segmentPlan + columnOverlays.",
+					"items": { "$ref": "#/$defs/cellOverlay" }
+				}
+			},
+			"additionalProperties": true
+		},
+		"barSummaryLine": {
+			"type": "object",
+			"required": ["metricId"],
+			"properties": {
+				"metricId": { "type": "string", "minLength": 1 },
+				"colorBySign": { "type": "boolean" }
+			},
+			"additionalProperties": true
+		},
+		"segmentGenericFootprint": {
+			"type": "object",
+			"description": "genericFootprint engine: ordered tracks + weights (see compile-layout.mjs).",
+			"required": ["tracks", "trackWeights"],
+			"properties": {
+				"tracks": {
+					"type": "array",
+					"minItems": 1,
+					"items": { "$ref": "#/$defs/genericTrack" }
+				},
+				"trackWeights": {
+					"type": "array",
+					"minItems": 0,
+					"items": { "type": "number" }
+				},
+				"chrome": { "type": "object", "additionalProperties": true },
+				"poc": { "type": "object", "additionalProperties": true },
+				"summaries": {
+					"type": "object",
+					"properties": {
+						"header": { "type": "array", "items": { "$ref": "#/$defs/barSummaryLine" } },
+						"footer": { "type": "array", "items": { "$ref": "#/$defs/barSummaryLine" } }
+					},
+					"additionalProperties": true
+				},
+				"typography": { "type": "object", "additionalProperties": true },
+				"spacing": { "type": "object", "additionalProperties": true }
+			},
+			"additionalProperties": true
+		},
+		"footprintSide": {
+			"type": "object",
+			"required": ["columns"],
+			"properties": {
+				"columns": {
+					"type": "array",
+					"items": { "$ref": "#/$defs/footprintColumn" }
+				}
+			},
+			"additionalProperties": false
+		},
+		"segmentFootprint": {
+			"type": "object",
+			"description": "footprint engine: left/right column stacks (see compile-layout.mjs).",
+			"properties": {
+				"layoutDirection": { "type": "string", "enum": ["ltr", "rtl"] },
+				"chrome": {
+					"type": "object",
+					"properties": {
+						"bodyVisible": { "type": "boolean" },
+						"wicksVisible": { "type": "boolean" },
+						"candleZOrder": { "type": "string", "enum": ["behind", "outlineFront"] },
+						"filteredBarTimeAxis": { "type": "string", "enum": ["compress", "retainGap"] },
+						"barAlignMode": {
+							"type": "string",
+							"enum": ["positiveLeftNegativeRight", "positiveRightNegativeLeft", "centered"]
+						},
+						"candleStyle": {
+							"type": "object",
+							"properties": {
+								"wickColor": { "type": "string", "minLength": 1 },
+								"bullWickColor": { "type": "string", "minLength": 1 },
+								"bearWickColor": { "type": "string", "minLength": 1 },
+								"bullBodyFill": { "type": "string", "minLength": 1 },
+								"bearBodyFill": { "type": "string", "minLength": 1 },
+								"bullBodyBorder": { "type": "string", "minLength": 1 },
+								"bearBodyBorder": { "type": "string", "minLength": 1 }
+							},
+							"required": ["wickColor", "bullBodyFill", "bearBodyFill", "bullBodyBorder", "bearBodyBorder"],
+							"additionalProperties": false
+						}
+					},
+					"additionalProperties": true
+				},
+				"typography": { "type": "object", "additionalProperties": true },
+				"left": { "$ref": "#/$defs/footprintSide" },
+				"right": { "$ref": "#/$defs/footprintSide" }
+			},
+			"additionalProperties": true
+		},
+		"footprintColumn": {
+			"type": "object",
+			"required": ["kind", "visible"],
+			"properties": {
+				"binding": { "$ref": "#/$defs/valueBinding" },
+				"metricId": { "type": "string" },
+				"kind": { "type": "string", "enum": ["number", "bar"] },
+				"visible": { "type": "boolean" },
+				"weight": { "type": "number" },
+				"placeholder": { "type": "string" },
+				"style": { "type": "object" },
+				"colorRules": { "type": "array" },
+				"presentation": { "type": "object" },
+				"overlays": {
+					"type": "array",
+					"description": "Footprint column overlays (segmentPlan metadata; LWC paint deferred).",
+					"items": { "$ref": "#/$defs/cellOverlay" }
+				}
+			}
+		},
+		"layout": {
+			"type": "object",
+			"required": ["id", "engine", "segment"],
+			"properties": {
+				"id": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$" },
+				"label": { "type": "string" },
+				"description": { "type": "string" },
+				"engine": {
+					"type": "string",
+					"enum": ["genericFootprint"]
+				},
+				"themeRef": { "type": "string" },
+				"segmentProfileRef": {
+					"type": "string",
+					"minLength": 1,
+					"description": "Key into catalog.segmentProfiles; compiled to segmentPlan.profileSelector (P2-B)."
+				},
+				"segment": { "type": "object", "description": "Shape depends on engine (see allOf)." }
+			},
+			"allOf": [
+				{
+					"if": { "properties": { "engine": { "const": "genericFootprint" } } },
+					"then": {
+						"properties": {
+							"segment": { "$ref": "#/$defs/segmentGenericFootprint" }
+						}
+					}
+				}
+			]
+		}
+	}
+}

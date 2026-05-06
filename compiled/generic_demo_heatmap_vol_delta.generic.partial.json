@@ -1,0 +1,71 @@
+{
+  "slots": [
+    {
+      "role": "heatmapCell",
+      "metricId": "vol",
+      "colorMode": "sequential"
+    },
+    {
+      "role": "number",
+      "metricId": "delta",
+      "colorBySign": true
+    }
+  ],
+  "slotWeights": [
+    1.2,
+    1
+  ],
+  "honeycombLayoutRevision": 528360300,
+  "candleStripFraction": 0.11,
+  "showPriceGrid": false,
+  "histogramShowValues": false,
+  "candleLaneVisible": true,
+  "candleLaneIndex": 2,
+  "candleInsetLeftCss": 0,
+  "candleInsetRightCss": 0,
+  "candleGapAfterCss": 0,
+  "theme": {
+    "gridColor": "rgba(255,255,255,0.06)",
+    "gridDash": [
+      2,
+      4
+    ],
+    "cellSeparator": "rgba(0,0,0,0.35)",
+    "numberFont": "11px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
+    "headerFont": "10px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
+    "footerFont": "9px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
+    "textPrimary": "#e8eaed",
+    "textOnDark": "#f8f9fc",
+    "numberPositive": "#7ae7c8",
+    "numberNegative": "#ff8a9b",
+    "numberZero": "#b0b4c0",
+    "histogramLeft": "rgba(236, 72, 153, 0.62)",
+    "histogramRight": "rgba(100, 181, 246, 0.62)",
+    "histogramSignPositive": "rgba(129, 212, 250, 0.88)",
+    "histogramSignNegative": "rgba(244, 114, 182, 0.88)",
+    "histogramSignNeutral": "rgba(158, 158, 170, 0.42)",
+    "histogramValueFont": "10px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
+    "histogramValueColor": "rgba(252, 252, 255, 0.95)",
+    "histogramValueOutline": "rgba(0, 0, 0, 0.65)",
+    "candleLaneBg": "rgba(28, 28, 32, 0.96)",
+    "candleLaneEdge": "rgba(255,255,255,0.12)",
+    "candleWick": "rgba(200, 203, 210, 0.55)",
+    "candleBull": "rgba(46, 160, 130, 0.88)",
+    "candleBear": "rgba(220, 90, 90, 0.9)",
+    "candleBullStroke": "rgba(120, 220, 190, 0.45)",
+    "candleBearStroke": "rgba(255, 160, 160, 0.45)",
+    "pocBorder": "#ffd54f"
+  },
+  "barHeaderLines": [
+    {
+      "metricId": "delta",
+      "colorBySign": true
+    }
+  ],
+  "pocMetricId": "vol",
+  "minFontPx": 8,
+  "maxFontPx": 16,
+  "minCellHeightPx": 3,
+  "barSummaryLabelGapCss": 4,
+  "barSummaryLineHeightCss": 11
+}

@@ -1,0 +1,27 @@
+{
+	"version": 1,
+	"left": {
+		"columns": [
+			{
+				"metricId": "bid",
+				"kind": "number",
+				"visible": true,
+				"weight": 1,
+				"colorRules": [
+					{
+						"when": {
+							"op": "and",
+							"a": { "op": "cmp", "metric": "bid", "cmp": "gt", "value": 15 },
+							"b": { "op": "cmp", "metric": "ask", "cmp": "lt", "value": 35 }
+						},
+						"style": { "textColor": "#42a5f5" }
+					},
+					{
+						"when": { "op": "literal", "value": true },
+						"style": { "textColor": "#d1d4dc" }
+					}
+				]
+			}
+		]
+	}
+}

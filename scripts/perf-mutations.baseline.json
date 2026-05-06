@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "scenario": "50x15_applyMutationToSeries_update",
+  "p95_ms": 12,
+  "p50_ms": 5,
+  "note": "Recorded from dev (≈2.9ms p95); budget allows slower CI VMs. Re-run `node ./scripts/perf-mutations.mjs --write-baseline` after deliberate perf changes."
+}

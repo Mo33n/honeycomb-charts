@@ -1,0 +1,601 @@
+{
+	"$schema": "./config.schema.json",
+	"schemaVersion": "1.0.0",
+	"defaultLayoutId": "pro_max_custom",
+	"dataContract": {
+		"description": "Metric ids referenced by tracks/columns must exist on each footprint row (values) or be derivable before render.",
+		"levelValueKeys": ["bid", "ask", "vol", "delta"],
+		"barAggregateKeys": ["open", "high", "low", "close", "volume", "volume_delta"],
+		"aliases": {
+			"buy_qty": "bid",
+			"sell_qty": "ask"
+		}
+	},
+	"productGoals": {
+		"timeToFirstGoodChart": "Pick defaultLayoutId or swap id + run compile; merge emitted JSON in app init.",
+		"measurableGuardrails": "compile-layout.mjs rejects duplicate layout ids and generic track / weight length mismatch.",
+		"userOutcome": "Authors define ordered columns/tracks, explicit data bindings (keys on incoming rows or bar), and optional presentation hints; compiled segmentPlan.json is the renderer-neutral contract."
+	},
+	"renderingModel": {
+		"description": "Two layers: (1) Data — each column declares binding.key (+ optional scope level|bar) so any numeric field name from your pipeline can appear in sequence. (2) Presentation — role/kind maps to a renderer primitive; optional presentation object is preserved in segmentPlan for a fully template-driven engine you plug in later. Today's honeycomb-charts primitives: genericFootprint → histogram | number | ratio | heatmapCell; footprint → number | bar. New primitives = extend your renderer + optionally add compiler mapping.",
+		"artifacts": {
+			"segmentPlan": "compiled/<layoutId>.segmentPlan.json lists columns in user order with binding + normalized slot snapshot.",
+			"lwcPartialOrPreset": "compiled/*.generic.partial.json or *.footprint-preset.v1.json for current TradingView honeycomb-charts merge."
+		}
+	},
+	"themes": {
+		"desk_dark": {
+			"gridColor": "rgba(255,255,255,0.06)",
+			"gridDash": [2, 4],
+			"cellSeparator": "rgba(0,0,0,0.35)",
+			"numberFont": "11px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
+			"headerFont": "10px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
+			"footerFont": "9px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
+			"textPrimary": "#e8eaed",
+			"textOnDark": "#f8f9fc",
+			"numberPositive": "#7ae7c8",
+			"numberNegative": "#ff8a9b",
+			"numberZero": "#b0b4c0",
+			"histogramLeft": "rgba(236, 72, 153, 0.62)",
+			"histogramRight": "rgba(100, 181, 246, 0.62)",
+			"histogramSignPositive": "rgba(129, 212, 250, 0.88)",
+			"histogramSignNegative": "rgba(244, 114, 182, 0.88)",
+			"histogramSignNeutral": "rgba(158, 158, 170, 0.42)",
+			"histogramValueFont": "10px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
+			"histogramValueColor": "rgba(252, 252, 255, 0.95)",
+			"histogramValueOutline": "rgba(0, 0, 0, 0.65)",
+			"candleLaneBg": "rgba(28, 28, 32, 0.96)",
+			"candleLaneEdge": "rgba(255,255,255,0.12)",
+			"candleWick": "rgba(200, 203, 210, 0.55)",
+			"candleBull": "rgba(46, 160, 130, 0.88)",
+			"candleBear": "rgba(220, 90, 90, 0.9)",
+			"candleBullStroke": "rgba(120, 220, 190, 0.45)",
+			"candleBearStroke": "rgba(255, 160, 160, 0.45)",
+			"pocBorder": "#ffd54f"
+		},
+		"light_minimal": {
+			"gridColor": "rgba(0,0,0,0.08)",
+			"gridDash": [2, 5],
+			"cellSeparator": "rgba(0,0,0,0.12)",
+			"numberFont": "11px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
+			"headerFont": "10px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
+			"footerFont": "9px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
+			"textPrimary": "#1a1d24",
+			"textOnDark": "#ffffff",
+			"numberPositive": "#1b5e20",
+			"numberNegative": "#b71c1c",
+			"numberZero": "#424242",
+			"histogramLeft": "rgba(25, 118, 210, 0.35)",
+			"histogramRight": "rgba(211, 47, 47, 0.35)",
+			"histogramSignPositive": "rgba(46, 125, 50, 0.55)",
+			"histogramSignNegative": "rgba(198, 40, 40, 0.55)",
+			"histogramSignNeutral": "rgba(97, 97, 97, 0.35)",
+			"histogramValueFont": "10px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
+			"histogramValueColor": "rgba(20, 20, 24, 0.92)",
+			"histogramValueOutline": "rgba(255, 255, 255, 0.85)",
+			"candleLaneBg": "rgba(0,0,0,0.04)",
+			"candleLaneEdge": "rgba(0,0,0,0.18)",
+			"candleWick": "rgba(0,0,0,0.45)",
+			"candleBull": "rgba(46, 160, 130, 0.85)",
+			"candleBear": "rgba(200, 60, 60, 0.88)",
+			"candleBullStroke": "rgba(30, 120, 90, 0.5)",
+			"candleBearStroke": "rgba(160, 40, 40, 0.5)",
+			"pocBorder": "#f57c00"
+		}
+	},
+	"templates": {
+		"hist_vol_left_signed": {
+			"description": "Left-growing volume histogram; fill follows bid/ask imbalance sign.",
+			"role": "histogram",
+			"metricId": "vol",
+			"grow": "left",
+			"colorizeBySign": true
+		},
+		"hist_delta_right_signed": {
+			"description": "Right-growing delta histogram with sign-based colors (order-flow wing).",
+			"role": "histogram",
+			"metricId": "delta",
+			"grow": "right",
+			"colorizeBySign": true
+		},
+		"hist_bid_left": {
+			"description": "Bid-only liquidity wing (magenta/blue desk style).",
+			"role": "histogram",
+			"metricId": "bid",
+			"grow": "left",
+			"histogramColor": "rgba(236, 72, 153, 0.58)"
+		},
+		"hist_ask_right": {
+			"description": "Ask-only liquidity wing.",
+			"role": "histogram",
+			"metricId": "ask",
+			"grow": "right",
+			"histogramColor": "rgba(100, 181, 246, 0.58)"
+		},
+		"num_bid_cell": {
+			"description": "Bid numbers with neutral dark cell wash.",
+			"role": "number",
+			"metricId": "bid",
+			"cellBackground": "rgba(36, 38, 44, 0.92)"
+		},
+		"num_ask_cell": {
+			"description": "Ask numbers with neutral dark cell wash.",
+			"role": "number",
+			"metricId": "ask",
+			"cellBackground": "rgba(32, 34, 40, 0.92)"
+		},
+		"num_delta_signed": {
+			"description": "Signed delta column (text color by sign).",
+			"role": "number",
+			"metricId": "delta",
+			"colorBySign": true
+		},
+		"num_vol_cell": {
+			"description": "Total volume per row with readable cell backing.",
+			"role": "number",
+			"metricId": "vol",
+			"cellBackground": "rgba(42, 42, 48, 0.94)"
+		},
+		"ratio_delta_over_vol": {
+			"description": "Compact delta/vol ratio strip between wings.",
+			"role": "ratio",
+			"metricId": "delta",
+			"ratioDenominatorId": "vol"
+		}
+	},
+	"layouts": [
+		{
+			"id": "desk_dark_orderflow",
+			"label": "Desk — dark order-flow stack",
+			"description": "Mirrors professional footprint UIs: outer liquidity histograms, inner bid/ask numbers, mini OHLC strip, bar Δ summary and POC on volume.",
+			"engine": "genericFootprint",
+			"themeRef": "desk_dark",
+			"segment": {
+				"chrome": {
+					"candleStripFraction": 0.1,
+					"showPriceGrid": false,
+					"histogramShowValues": true
+				},
+				"tracks": [
+					{ "templateRef": "hist_bid_left" },
+					{ "templateRef": "num_delta_signed" },
+					{ "templateRef": "num_vol_cell" },
+					{ "templateRef": "hist_ask_right" },
+					{ "role": "candle", "insetLeftCss": 0, "insetRightCss": 0, "gapAfterCss": 0 }
+				],
+				"trackWeights": [1.18, 1.05, 1.12, 1.18],
+				"poc": { "metricId": "vol" },
+				"summaries": {
+					"header": [{ "metricId": "delta", "colorBySign": true }],
+					"footer": [
+						{ "metricId": "delta", "colorBySign": true },
+						{ "metricId": "vol", "colorBySign": false }
+					]
+				},
+				"typography": { "minFontPx": 1, "maxFontPx": 16, "minCellHeightPx": 3 },
+				"spacing": { "barSummaryLabelGapCss": 5, "barSummaryLineHeightCss": 11 }
+			}
+		},
+		{
+			"id": "desk_dark_delta_vol_hist",
+			"label": "Desk — Δ text + vol cell + Δ histogram",
+			"description": "Reference layout from honeycomb generic-footprint example: fast scan of imbalance and total activity per price.",
+			"engine": "genericFootprint",
+			"themeRef": "desk_dark",
+			"segment": {
+				"chrome": {
+					"candleStripFraction": 0.1,
+					"showPriceGrid": false,
+					"histogramShowValues": true
+				},
+				"tracks": [
+					{ "templateRef": "num_delta_signed" },
+					{ "templateRef": "num_vol_cell" },
+					{ "templateRef": "hist_delta_right_signed" },
+					{ "role": "candle", "insetLeftCss": 0, "insetRightCss": 0, "gapAfterCss": 0 }
+				],
+				"trackWeights": [1, 1.12, 1.22],
+				"poc": { "metricId": "vol" },
+				"summaries": {
+					"header": [{ "metricId": "delta", "colorBySign": true }],
+					"footer": [
+						{ "metricId": "delta", "colorBySign": true },
+						{ "metricId": "vol", "colorBySign": false }
+					]
+				},
+				"typography": { "minFontPx": 8, "maxFontPx": 16, "minCellHeightPx": 3 },
+				"spacing": { "barSummaryLabelGapCss": 5, "barSummaryLineHeightCss": 11 }
+			}
+		},
+		{
+			"id": "desk_dark_vol_ratio_delta",
+			"label": "Desk — vol wing | Δ/Vol | Δ wing",
+			"description": "Default generic triple: absolute liquidity left, relative pressure center, directional delta right.",
+			"engine": "genericFootprint",
+			"themeRef": "desk_dark",
+			"segment": {
+				"chrome": {
+					"candleStripFraction": 0.12,
+					"showPriceGrid": true,
+					"histogramShowValues": true
+				},
+				"tracks": [
+					{
+						"role": "histogram",
+						"metricId": "vol",
+						"grow": "left",
+						"histogramColor": "rgba(144, 202, 249, 0.58)"
+					},
+					{ "templateRef": "ratio_delta_over_vol" },
+					{ "templateRef": "hist_delta_right_signed" },
+					{ "role": "candle", "insetLeftCss": 0, "insetRightCss": 0, "gapAfterCss": 0 }
+				],
+				"trackWeights": [1.15, 1, 1.15],
+				"poc": { "metricId": "vol" },
+				"summaries": {
+					"header": [{ "metricId": "delta", "colorBySign": true }],
+					"footer": [{ "metricId": "vol", "colorBySign": false }]
+				},
+				"typography": { "minFontPx": 8, "maxFontPx": 16, "minCellHeightPx": 3 },
+				"spacing": { "barSummaryLabelGapCss": 4, "barSummaryLineHeightCss": 12 }
+			}
+		},
+		{
+			"id": "generic_binding_sequence_demo",
+			"label": "Generic — user-defined keys only (binding)",
+			"description": "Column order is the tracks array order. Each column binds to binding.key on each footprint level (incoming values map). Host must supply those keys (e.g. sell_qty/buy_qty) or normalize before setData. Optional presentation is copied to segmentPlan.extensions for your future renderer.",
+			"engine": "genericFootprint",
+			"themeRef": "desk_dark",
+			"segment": {
+				"chrome": {
+					"candleStripFraction": 0.1,
+					"showPriceGrid": false,
+					"histogramShowValues": true
+				},
+				"tracks": [
+					{
+						"id": "qty_sell",
+						"binding": { "key": "sell_qty", "scope": "level" },
+						"presentation": { "intent": "liquidity_wing_left" },
+						"role": "histogram",
+						"grow": "left",
+						"histogramColor": "rgba(244, 143, 177, 0.58)"
+					},
+					{
+						"id": "qty_buy",
+						"binding": { "key": "buy_qty", "scope": "level" },
+						"presentation": { "intent": "liquidity_wing_right" },
+						"role": "histogram",
+						"grow": "right",
+						"histogramColor": "rgba(129, 212, 250, 0.58)"
+					},
+					{ "role": "candle", "insetLeftCss": 0, "insetRightCss": 0, "gapAfterCss": 0 }
+				],
+				"trackWeights": [1.05, 1.05],
+				"poc": { "metricId": "vol" },
+				"summaries": {
+					"header": [{ "metricId": "delta", "colorBySign": true }]
+				},
+				"typography": { "minFontPx": 8, "maxFontPx": 16, "minCellHeightPx": 3 },
+				"spacing": { "barSummaryLabelGapCss": 4, "barSummaryLineHeightCss": 11 }
+			}
+		},
+		{
+			"id": "generic_demo_heatmap_vol_delta",
+			"label": "Generic — heatmap (vol) + signed Δ",
+			"description": "P1 reference: sequential heatmapCell on per-row volume next to signed delta numbers (see ADR-0004).",
+			"engine": "genericFootprint",
+			"themeRef": "desk_dark",
+			"segment": {
+				"chrome": {
+					"candleStripFraction": 0.11,
+					"showPriceGrid": false,
+					"histogramShowValues": false
+				},
+				"tracks": [
+					{
+						"id": "hm_vol",
+						"role": "heatmapCell",
+						"metricId": "vol",
+						"colorMode": "sequential",
+						"presentation": { "intent": "liquidity_intensity" }
+					},
+					{ "templateRef": "num_delta_signed" },
+					{ "role": "candle", "insetLeftCss": 0, "insetRightCss": 0, "gapAfterCss": 0 }
+				],
+				"trackWeights": [1.2, 1],
+				"poc": { "metricId": "vol" },
+				"summaries": {
+					"header": [{ "metricId": "delta", "colorBySign": true }]
+				},
+				"typography": { "minFontPx": 8, "maxFontPx": 16, "minCellHeightPx": 3 },
+				"spacing": { "barSummaryLabelGapCss": 4, "barSummaryLineHeightCss": 11 }
+			}
+		},
+		{
+			"id": "desk_dark_signed_volume_wings",
+			"label": "Desk — signed volume histograms",
+			"description": "Both outer tracks are volume, growing outward, colored by row delta sign (aggressive buy vs sell feel).",
+			"engine": "genericFootprint",
+			"themeRef": "desk_dark",
+			"segment": {
+				"chrome": {
+					"candleStripFraction": 0.11,
+					"showPriceGrid": false,
+					"histogramShowValues": true
+				},
+				"tracks": [
+					{ "templateRef": "hist_vol_left_signed" },
+					{ "templateRef": "num_bid_cell" },
+					{ "templateRef": "num_ask_cell" },
+					{ "templateRef": "hist_vol_left_signed", "grow": "right", "metricId": "vol" },
+					{ "role": "candle", "insetLeftCss": 0, "insetRightCss": 0, "gapAfterCss": 0 }
+				],
+				"trackWeights": [1.2, 0.95, 0.95, 1.2],
+				"poc": { "metricId": "vol" },
+				"summaries": {
+					"header": [{ "metricId": "delta", "colorBySign": true }],
+					"footer": [{ "metricId": "vol", "colorBySign": false }]
+				},
+				"typography": { "minFontPx": 8, "maxFontPx": 16, "minCellHeightPx": 3 },
+				"spacing": { "barSummaryLabelGapCss": 4, "barSummaryLineHeightCss": 11 }
+			}
+		},
+		{
+			"id": "generic_ask_candle_bid",
+			"label": "Generic — ask | candle | bid",
+			"description": "Minimal generic layout placing ask column, then candle lane, then bid column.",
+			"engine": "genericFootprint",
+			"themeRef": "desk_dark",
+			"segment": {
+				"chrome": {
+					"showPriceGrid": false,
+					"histogramShowValues": false
+				},
+				"tracks": [
+					{
+						"role": "heatmapCell",
+						"metricId": "ask",
+						"colorMode": "sequential",
+						"heatmapColor": "rgba(220, 90, 90, 0.95)",
+						"insetLeftCss": 1,
+						"insetRightCss": 1,
+						"gapAfterCss": 2
+					},
+					{
+						"role": "candle",
+						"candleStripFraction": 0.16,
+						"insetLeftCss": 1,
+						"insetRightCss": 1,
+						"gapAfterCss": 2,
+						"candleWick": "rgba(220,220,230,0.85)",
+						"candleBull": "rgba(46, 160, 130, 0.9)",
+						"candleBear": "rgba(220, 90, 90, 0.9)",
+						"candleBullStroke": "rgba(120, 220, 190, 0.55)",
+						"candleBearStroke": "rgba(255, 160, 160, 0.55)"
+					},
+					{
+						"role": "heatmapCell",
+						"metricId": "bid",
+						"colorMode": "sequential",
+						"heatmapColor": "rgba(46, 160, 130, 0.95)",
+						"insetLeftCss": 1,
+						"insetRightCss": 1,
+						"gapAfterCss": 0
+					}
+				],
+				"trackWeights": [1, 1],
+				"typography": { "minFontPx": 8, "maxFontPx": 16, "minCellHeightPx": 3 },
+				"spacing": { "barSummaryLabelGapCss": 4, "barSummaryLineHeightCss": 11 }
+			}
+		},
+		{
+			"id": "light_bid_ask_delta_bar",
+			"label": "Light — classic bid / ask + delta bar",
+			"description": "Generic layout: bid/ask numbers with right-side delta bar.",
+			"engine": "genericFootprint",
+			"segment": {
+				"chrome": {
+					"candleStripFraction": 0.12,
+					"showPriceGrid": false,
+					"histogramShowValues": false
+				},
+				"typography": {
+					"minFontPx": 8,
+					"maxFontPx": 12,
+					"minCellHeightPx": 4,
+					"lodOmitNumberGlyphs": false
+				},
+				"tracks": [
+					{ "templateRef": "num_bid_cell" },
+					{ "templateRef": "num_ask_cell" },
+					{ "role": "candle", "insetLeftCss": 0, "insetRightCss": 0, "gapAfterCss": 0 },
+					{
+						"role": "bar",
+						"metricId": "delta",
+						"barAlignMode": "positiveRightNegativeLeft",
+						"barPositiveColor": "rgba(100, 181, 246, 0.75)",
+						"barNegativeColor": "rgba(244, 143, 177, 0.78)"
+					}
+				],
+				"trackWeights": [1, 1, 1.25],
+				"poc": { "metricId": "vol" },
+				"spacing": { "barSummaryLabelGapCss": 4, "barSummaryLineHeightCss": 11 }
+			}
+		},
+		{
+			"id": "desk_footprint_imbalance_rules",
+			"label": "Desk — bid/ask + delta bar + highlight rules",
+			"description": "Generic bid/ask numbers with delta bar and emphasis coloring.",
+			"engine": "genericFootprint",
+			"segment": {
+				"chrome": {
+					"candleStripFraction": 0.12,
+					"showPriceGrid": false,
+					"histogramShowValues": false
+				},
+				"typography": {
+					"minFontPx": 8,
+					"maxFontPx": 13,
+					"minCellHeightPx": 4,
+					"lodOmitNumberGlyphs": false
+				},
+				"tracks": [
+					{ "templateRef": "num_bid_cell" },
+					{ "templateRef": "num_ask_cell", "colorBySign": true },
+					{ "role": "candle", "insetLeftCss": 0, "insetRightCss": 0, "gapAfterCss": 0 },
+					{
+						"role": "bar",
+						"metricId": "delta",
+						"barAlignMode": "positiveRightNegativeLeft",
+						"barPositiveColor": "rgba(100, 181, 246, 0.75)",
+						"barNegativeColor": "rgba(244, 143, 177, 0.78)"
+					}
+				],
+				"trackWeights": [1, 1, 1.2],
+				"poc": { "metricId": "vol" },
+				"spacing": { "barSummaryLabelGapCss": 4, "barSummaryLineHeightCss": 11 }
+			}
+		},
+		{
+			"id": "desk_candle_only",
+			"label": "Desk — candle only",
+			"description": "Minimal generic layout that renders candle lane only.",
+			"engine": "genericFootprint",
+			"segment": {
+				"chrome": {
+					"showPriceGrid": false,
+					"histogramShowValues": false,
+					"lodHideNumberMinSlotAreaPx": 99999
+				},
+				"typography": {
+					"minFontPx": 8,
+					"maxFontPx": 13,
+					"minCellHeightPx": 4,
+					"lodOmitNumberGlyphs": true
+				},
+				"tracks": [
+					{
+						"role": "candle",
+						"candleStripFraction": 0.9,
+						"insetLeftCss": 0,
+						"insetRightCss": 0,
+						"gapAfterCss": 0,
+						"candleLaneBg": "rgba(0,0,0,0)",
+						"candleLaneEdge": "rgba(0,0,0,0)"
+					}
+				],
+				"trackWeights": []
+			}
+		},
+		{
+			"id": "desk_candle_vol_profile",
+			"label": "Desk — candle | volume profile",
+			"description": "Mini OHLC on the left; single-color per-price volume histogram centered in the profile strip (symmetric about the strip midline).",
+			"engine": "genericFootprint",
+			"themeRef": "desk_dark",
+			"segment": {
+				"chrome": {
+					"candleStripFraction": 0.22,
+					"showPriceGrid": true,
+					"histogramShowValues": false
+				},
+				"tracks": [
+					{
+						"role": "candle",
+						"candleStripFraction": 0.22,
+						"insetLeftCss": 0,
+						"insetRightCss": 1,
+						"gapAfterCss": 0
+					},
+					{
+						"role": "histogram",
+						"metricId": "vol",
+						"grow": "right",
+						"histogramColor": "rgba(129, 212, 250, 0.72)",
+						"histogramMaxFillFrac": 0.58,
+						"histogramLengthGamma": 1.45,
+						"insetLeftCss": 0,
+						"insetRightCss": 0,
+						"gapAfterCss": 0
+					}
+				],
+				"trackWeights": [1.35],
+				"summaries": {
+					"footer": [{ "metricId": "vol", "colorBySign": false }]
+				},
+				"typography": { "minFontPx": 8, "maxFontPx": 14, "minCellHeightPx": 3 },
+				"spacing": { "barSummaryLabelGapCss": 4, "barSummaryLineHeightCss": 11 }
+			}
+		},
+		{
+			"id": "pro_max_custom",
+			"label": "Pro — max customization",
+			"description": "Ask heatmap + candle lane + bid heatmap + centered delta bar with explicit POC, summaries, typography, and spacing.",
+			"engine": "genericFootprint",
+			"themeRef": "desk_dark",
+			"segment": {
+				"chrome": {
+					"showPriceGrid": false,
+					"histogramShowValues": false,
+					"candleStripFraction": 0.16,
+					"lodSummaryMinSlotAreaPx": 140,
+					"lodHideRatioMinSlotAreaPx": 110,
+					"lodHideNumberMinSlotAreaPx": 85
+				},
+				"typography": {
+					"minFontPx": 2,
+					"maxFontPx": 16,
+					"minCellHeightPx": 3,
+					"lodOmitNumberGlyphs": false
+				},
+				"spacing": {
+					"barSummaryLabelGapCss": 4,
+					"barSummaryLineHeightCss": 11
+				},
+				"summaries": {
+					"header": [{ "metricId": "delta", "colorBySign": true }],
+					"footer": [
+						{ "metricId": "vol", "colorBySign": false },
+						{ "metricId": "delta", "colorBySign": true }
+					]
+				},
+				"tracks": [
+					{
+						"role": "heatmapCell",
+						"metricId": "ask",
+						"colorMode": "sequential",
+						"heatmapColor": "rgba(239,68,68,0.95)",
+						"insetLeftCss": 1,
+						"insetRightCss": 1,
+						"gapAfterCss": 2
+					},
+					{
+						"role": "candle",
+						"candleStripFraction": 0.16,
+						"insetLeftCss": 1,
+						"insetRightCss": 1,
+						"gapAfterCss": 2,
+						"candleWick": "rgba(220,220,230,0.9)",
+						"candleBull": "rgba(34,197,94,0.9)",
+						"candleBear": "rgba(239,68,68,0.9)",
+						"candleBullStroke": "rgba(134,239,172,0.6)",
+						"candleBearStroke": "rgba(252,165,165,0.6)",
+						"candleLaneBg": "rgba(255,255,255,0.02)",
+						"candleLaneEdge": "rgba(148,163,184,0.25)"
+					},
+					{
+						"role": "heatmapCell",
+						"metricId": "bid",
+						"colorMode": "sequential",
+						"heatmapColor": "rgba(34,197,94,0.95)",
+						"insetLeftCss": 1,
+						"insetRightCss": 1,
+						"gapAfterCss": 2
+					}
+				],
+				"trackWeights": [1, 1]
+			}
+		}
+	]
+}

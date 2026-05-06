@@ -1,0 +1,21 @@
+{
+  "slots": [],
+  "slotWeights": [],
+  "honeycombLayoutRevision": 3500679975,
+  "showPriceGrid": false,
+  "histogramShowValues": false,
+  "lodHideNumberMinSlotAreaPx": 99999,
+  "candleLaneVisible": true,
+  "candleLaneIndex": 0,
+  "candleStripFraction": 0.9,
+  "candleInsetLeftCss": 0,
+  "candleInsetRightCss": 0,
+  "candleGapAfterCss": 0,
+  "theme": {
+    "candleLaneBg": "rgba(0,0,0,0)",
+    "candleLaneEdge": "rgba(0,0,0,0)"
+  },
+  "minFontPx": 8,
+  "maxFontPx": 13,
+  "minCellHeightPx": 4
+}

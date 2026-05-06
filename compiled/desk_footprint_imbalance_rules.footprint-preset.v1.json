@@ -1,0 +1,75 @@
+{
+  "version": 1,
+  "layoutDirection": "ltr",
+  "left": {
+    "columns": [
+      {
+        "metricId": "bid",
+        "kind": "number",
+        "visible": true,
+        "weight": 1,
+        "style": {
+          "numberHistogram": {
+            "sourceMetricId": "bid",
+            "direction": "left",
+            "color": "rgba(236, 72, 153, 0.45)"
+          }
+        }
+      },
+      {
+        "metricId": "ask",
+        "kind": "number",
+        "visible": true,
+        "weight": 1,
+        "colorRules": [
+          {
+            "when": {
+              "op": "and",
+              "a": {
+                "op": "cmp",
+                "metric": "ask",
+                "cmp": "gt",
+                "value": 40
+              },
+              "b": {
+                "op": "cmp",
+                "metric": "bid",
+                "cmp": "lt",
+                "value": 25
+              }
+            },
+            "style": {
+              "cellOutline": {
+                "color": "rgba(255, 213, 79, 0.95)",
+                "widthPx": 1
+              },
+              "textColor": "#fff9c4"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "right": {
+    "columns": [
+      {
+        "metricId": "delta",
+        "kind": "bar",
+        "visible": true,
+        "weight": 1.2,
+        "style": {
+          "barPositiveColor": "rgba(100, 181, 246, 0.75)",
+          "barNegativeColor": "rgba(244, 143, 177, 0.78)"
+        }
+      }
+    ]
+  },
+  "bodyVisible": true,
+  "wicksVisible": true,
+  "candleZOrder": "outlineFront",
+  "filteredBarTimeAxis": "compress",
+  "minFontPx": 8,
+  "maxFontPx": 13,
+  "minCellHeightPx": 4,
+  "lodOmitNumberGlyphs": false
+}

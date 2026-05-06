@@ -1,0 +1,42 @@
+{
+  "slots": [
+    {
+      "role": "number",
+      "metricId": "bid",
+      "cellBackground": "rgba(36, 38, 44, 0.92)"
+    },
+    {
+      "role": "number",
+      "metricId": "ask",
+      "colorBySign": true,
+      "cellBackground": "rgba(32, 34, 40, 0.92)"
+    },
+    {
+      "role": "bar",
+      "metricId": "delta",
+      "barAlignMode": "positiveRightNegativeLeft",
+      "barPositiveColor": "rgba(100, 181, 246, 0.75)",
+      "barNegativeColor": "rgba(244, 143, 177, 0.78)"
+    }
+  ],
+  "slotWeights": [
+    1,
+    1,
+    1.2
+  ],
+  "honeycombLayoutRevision": 3260213065,
+  "candleStripFraction": 0.12,
+  "showPriceGrid": false,
+  "histogramShowValues": false,
+  "candleLaneVisible": true,
+  "candleLaneIndex": 2,
+  "candleInsetLeftCss": 0,
+  "candleInsetRightCss": 0,
+  "candleGapAfterCss": 0,
+  "pocMetricId": "vol",
+  "minFontPx": 8,
+  "maxFontPx": 13,
+  "minCellHeightPx": 4,
+  "barSummaryLabelGapCss": 4,
+  "barSummaryLineHeightCss": 11
+}

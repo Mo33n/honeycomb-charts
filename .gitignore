@@ -1,0 +1,21 @@
+# Dependencies & build output (root + nested packages e.g. demo/, packages/core/)
+**/node_modules/
+node_modules/
+**/dist/
+dist/
+
+# Documentation tree (author locally or publish separately)
+docs/
+docs-site/
+
+# Generated / local sample data
+SampleData.json
+
+# OS / editor
+.DS_Store
+*.log
+
+# Env (keep templates if you add them)
+.env
+.env.*
+!.env.example

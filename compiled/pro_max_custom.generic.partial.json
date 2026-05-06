@@ -1,0 +1,91 @@
+{
+  "slots": [
+    {
+      "role": "heatmapCell",
+      "metricId": "ask",
+      "colorMode": "sequential",
+      "heatmapColor": "rgba(239,68,68,0.95)",
+      "insetLeftCss": 1,
+      "insetRightCss": 1,
+      "gapAfterCss": 2
+    },
+    {
+      "role": "heatmapCell",
+      "metricId": "bid",
+      "colorMode": "sequential",
+      "heatmapColor": "rgba(34,197,94,0.95)",
+      "insetLeftCss": 1,
+      "insetRightCss": 1,
+      "gapAfterCss": 2
+    }
+  ],
+  "slotWeights": [
+    1,
+    1
+  ],
+  "honeycombLayoutRevision": 1005459273,
+  "showPriceGrid": false,
+  "histogramShowValues": false,
+  "candleStripFraction": 0.16,
+  "lodSummaryMinSlotAreaPx": 140,
+  "lodHideRatioMinSlotAreaPx": 110,
+  "lodHideNumberMinSlotAreaPx": 85,
+  "candleLaneVisible": true,
+  "candleLaneIndex": 1,
+  "candleInsetLeftCss": 1,
+  "candleInsetRightCss": 1,
+  "candleGapAfterCss": 2,
+  "theme": {
+    "gridColor": "rgba(255,255,255,0.06)",
+    "gridDash": [
+      2,
+      4
+    ],
+    "cellSeparator": "rgba(0,0,0,0.35)",
+    "numberFont": "11px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
+    "headerFont": "10px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
+    "footerFont": "9px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
+    "textPrimary": "#e8eaed",
+    "textOnDark": "#f8f9fc",
+    "numberPositive": "#7ae7c8",
+    "numberNegative": "#ff8a9b",
+    "numberZero": "#b0b4c0",
+    "histogramLeft": "rgba(236, 72, 153, 0.62)",
+    "histogramRight": "rgba(100, 181, 246, 0.62)",
+    "histogramSignPositive": "rgba(129, 212, 250, 0.88)",
+    "histogramSignNegative": "rgba(244, 114, 182, 0.88)",
+    "histogramSignNeutral": "rgba(158, 158, 170, 0.42)",
+    "histogramValueFont": "10px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
+    "histogramValueColor": "rgba(252, 252, 255, 0.95)",
+    "histogramValueOutline": "rgba(0, 0, 0, 0.65)",
+    "candleLaneBg": "rgba(255,255,255,0.02)",
+    "candleLaneEdge": "rgba(148,163,184,0.25)",
+    "candleWick": "rgba(220,220,230,0.9)",
+    "candleBull": "rgba(34,197,94,0.9)",
+    "candleBear": "rgba(239,68,68,0.9)",
+    "candleBullStroke": "rgba(134,239,172,0.6)",
+    "candleBearStroke": "rgba(252,165,165,0.6)",
+    "pocBorder": "#ffd54f"
+  },
+  "barHeaderLines": [
+    {
+      "metricId": "delta",
+      "colorBySign": true
+    }
+  ],
+  "barFooterLines": [
+    {
+      "metricId": "vol",
+      "colorBySign": false
+    },
+    {
+      "metricId": "delta",
+      "colorBySign": true
+    }
+  ],
+  "minFontPx": 2,
+  "maxFontPx": 16,
+  "minCellHeightPx": 3,
+  "barSummaryLabelGapCss": 4,
+  "barSummaryLineHeightCss": 11
+}

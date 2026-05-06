@@ -1,0 +1,101 @@
+{
+  "schemaVersion": "1.0.0",
+  "layouts": [
+    {
+      "id": "desk_dark_orderflow",
+      "engine": "genericFootprint",
+      "artifacts": {
+        "lwcPartial": "compiled/desk_dark_orderflow.generic.partial.json",
+        "segmentPlan": "compiled/desk_dark_orderflow.segmentPlan.json"
+      }
+    },
+    {
+      "id": "desk_dark_delta_vol_hist",
+      "engine": "genericFootprint",
+      "artifacts": {
+        "lwcPartial": "compiled/desk_dark_delta_vol_hist.generic.partial.json",
+        "segmentPlan": "compiled/desk_dark_delta_vol_hist.segmentPlan.json"
+      }
+    },
+    {
+      "id": "desk_dark_vol_ratio_delta",
+      "engine": "genericFootprint",
+      "artifacts": {
+        "lwcPartial": "compiled/desk_dark_vol_ratio_delta.generic.partial.json",
+        "segmentPlan": "compiled/desk_dark_vol_ratio_delta.segmentPlan.json"
+      }
+    },
+    {
+      "id": "generic_binding_sequence_demo",
+      "engine": "genericFootprint",
+      "artifacts": {
+        "lwcPartial": "compiled/generic_binding_sequence_demo.generic.partial.json",
+        "segmentPlan": "compiled/generic_binding_sequence_demo.segmentPlan.json"
+      }
+    },
+    {
+      "id": "generic_demo_heatmap_vol_delta",
+      "engine": "genericFootprint",
+      "artifacts": {
+        "lwcPartial": "compiled/generic_demo_heatmap_vol_delta.generic.partial.json",
+        "segmentPlan": "compiled/generic_demo_heatmap_vol_delta.segmentPlan.json"
+      }
+    },
+    {
+      "id": "desk_dark_signed_volume_wings",
+      "engine": "genericFootprint",
+      "artifacts": {
+        "lwcPartial": "compiled/desk_dark_signed_volume_wings.generic.partial.json",
+        "segmentPlan": "compiled/desk_dark_signed_volume_wings.segmentPlan.json"
+      }
+    },
+    {
+      "id": "generic_ask_candle_bid",
+      "engine": "genericFootprint",
+      "artifacts": {
+        "lwcPartial": "compiled/generic_ask_candle_bid.generic.partial.json",
+        "segmentPlan": "compiled/generic_ask_candle_bid.segmentPlan.json"
+      }
+    },
+    {
+      "id": "light_bid_ask_delta_bar",
+      "engine": "genericFootprint",
+      "artifacts": {
+        "lwcPartial": "compiled/light_bid_ask_delta_bar.generic.partial.json",
+        "segmentPlan": "compiled/light_bid_ask_delta_bar.segmentPlan.json"
+      }
+    },
+    {
+      "id": "desk_footprint_imbalance_rules",
+      "engine": "genericFootprint",
+      "artifacts": {
+        "lwcPartial": "compiled/desk_footprint_imbalance_rules.generic.partial.json",
+        "segmentPlan": "compiled/desk_footprint_imbalance_rules.segmentPlan.json"
+      }
+    },
+    {
+      "id": "desk_candle_only",
+      "engine": "genericFootprint",
+      "artifacts": {
+        "lwcPartial": "compiled/desk_candle_only.generic.partial.json",
+        "segmentPlan": "compiled/desk_candle_only.segmentPlan.json"
+      }
+    },
+    {
+      "id": "desk_candle_vol_profile",
+      "engine": "genericFootprint",
+      "artifacts": {
+        "lwcPartial": "compiled/desk_candle_vol_profile.generic.partial.json",
+        "segmentPlan": "compiled/desk_candle_vol_profile.segmentPlan.json"
+      }
+    },
+    {
+      "id": "pro_max_custom",
+      "engine": "genericFootprint",
+      "artifacts": {
+        "lwcPartial": "compiled/pro_max_custom.generic.partial.json",
+        "segmentPlan": "compiled/pro_max_custom.segmentPlan.json"
+      }
+    }
+  ]
+}

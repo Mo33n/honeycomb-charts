@@ -1,0 +1,27 @@
+{
+	"version": 1,
+	"right": {
+		"columns": [
+			{
+				"metricId": "delta",
+				"kind": "number",
+				"visible": true,
+				"weight": 1,
+				"colorRules": [
+					{
+						"when": { "op": "cmp", "metric": "delta", "cmp": "gt", "value": 0 },
+						"style": { "textColor": "#66bb6a" }
+					},
+					{
+						"when": { "op": "cmp", "metric": "delta", "cmp": "lt", "value": 0 },
+						"style": { "textColor": "#ef5350" }
+					},
+					{
+						"when": { "op": "literal", "value": true },
+						"style": { "textColor": "#d1d4dc" }
+					}
+				]
+			}
+		]
+	}
+}

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>honeycomb-charts — replay mode example</title>
+		<style>
+			html,
+			body {
+				margin: 0;
+				height: 100%;
+				background: #131722;
+				color: #d1d4dc;
+				font-family: system-ui, sans-serif;
+			}
+			#toolbar {
+				padding: 8px 12px;
+				display: flex;
+				align-items: center;
+				gap: 12px;
+				flex-wrap: wrap;
+				border-bottom: 1px solid #363a45;
+			}
+			#chart {
+				height: calc(100vh - 52px);
+			}
+			label[for='playhead'] {
+				min-width: 7rem;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="toolbar">
+			<strong data-testid="replay-mode">replay</strong>
+			<label for="playhead">Playhead</label>
+			<input id="playhead" type="range" min="0" max="23" value="23" step="1" />
+			<span>Visible bars: <span data-testid="replay-visible-count">0</span></span>
+		</div>
+		<div id="chart"></div>
+		<script type="module" src="./main.ts"></script>
+	</body>
+</html>

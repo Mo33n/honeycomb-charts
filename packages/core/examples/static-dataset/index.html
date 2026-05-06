@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>honeycomb-charts — static dataset + display config</title>
+		<style>
+			html,
+			body {
+				margin: 0;
+				height: 100%;
+				background: #131722;
+				color: #d1d4dc;
+				font-family: system-ui, sans-serif;
+			}
+			body {
+				display: flex;
+				flex-direction: column;
+			}
+			#header {
+				flex-shrink: 0;
+				border-bottom: 1px solid #363a45;
+			}
+			#meta {
+				padding: 8px 12px 4px;
+				font-size: 13px;
+			}
+			#legend {
+				padding: 4px 12px 10px;
+				font-size: 12px;
+				line-height: 1.5;
+				color: #b2b5be;
+			}
+			#legend strong {
+				color: #d1d4dc;
+				font-weight: 600;
+			}
+			#legend code {
+				font-size: 11px;
+				background: #2a2e39;
+				padding: 1px 5px;
+				border-radius: 3px;
+			}
+			#legend .chip {
+				display: inline-block;
+				margin-right: 2px;
+				padding: 0 6px;
+				border-radius: 4px;
+				font-size: 11px;
+				font-weight: 600;
+			}
+			.chip-num {
+				background: rgba(120, 123, 134, 0.28);
+				color: #d1d4dc;
+			}
+			.chip-delta {
+				background: rgba(38, 166, 154, 0.2);
+				color: #8ed4cc;
+			}
+			.chip-candle {
+				background: rgba(100, 181, 246, 0.2);
+				color: #64b5f6;
+			}
+			#chart {
+				flex: 1;
+				min-height: 0;
+			}
+		</style>
+	</head>
+	<body>
+		<header id="header">
+			<div id="meta"></div>
+			<div id="legend" aria-label="Footprint column legend"></div>
+		</header>
+		<div id="chart"></div>
+		<script type="module" src="./main.ts"></script>
+	</body>
+</html>

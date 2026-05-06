@@ -1,0 +1,26 @@
+import type { FootprintTheme } from './types.js';
+
+export const DEFAULT_FOOTPRINT_THEME: FootprintTheme = {
+	background: '#131722',
+	gridColor: 'rgba(180, 180, 190, 0.1)',
+	gridDash: [2, 4],
+	cellSeparator: 'rgba(0, 0, 0, 0.25)',
+	numberFont: '11px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',
+	headerFont: '10px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',
+	footerFont: '9px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',
+	textPrimary: '#d1d4dc',
+	textOnDark: '#f0f3fa',
+	histogramLeft: 'rgba(100, 181, 246, 0.55)',
+	histogramRight: 'rgba(239, 154, 154, 0.6)',
+	candleLaneBg: 'rgba(255, 255, 255, 0.04)',
+	candleLaneEdge: 'rgba(255, 255, 255, 0.12)',
+	candleWick: 'rgba(200, 203, 210, 0.55)',
+	candleBull: 'rgba(46, 160, 130, 0.88)',
+	candleBear: 'rgba(220, 90, 90, 0.9)',
+	candleBullStroke: 'rgba(120, 220, 190, 0.45)',
+	candleBearStroke: 'rgba(255, 160, 160, 0.45)',
+	pocBorder: '#0a0a0a',
+	histogramValueFont: '10px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',
+	histogramValueColor: 'rgba(252, 252, 255, 0.96)',
+	histogramValueOutline: 'rgba(0, 0, 0, 0.62)',
+};

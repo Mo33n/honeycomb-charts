@@ -1,0 +1,13 @@
+{
+	"version": 1,
+	"forwardCompatNoise": { "any": true },
+	"left": {
+		"columns": [
+			{
+				"metricId": "bid",
+				"kind": "number",
+				"visible": true
+			}
+		]
+	}
+}

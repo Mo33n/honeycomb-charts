@@ -1,0 +1,74 @@
+{
+  "segmentPlanVersion": 1,
+  "renderPlanVersion": "1.0.0",
+  "layoutId": "generic_ask_candle_bid",
+  "engine": "genericFootprint",
+  "layoutRevision": 1151073816,
+  "themeRef": "desk_dark",
+  "columns": [
+    {
+      "order": 0,
+      "binding": {
+        "key": "ask",
+        "scope": "level"
+      },
+      "weight": 1,
+      "lwcGenericFootprintSlot": {
+        "role": "heatmapCell",
+        "metricId": "ask",
+        "colorMode": "sequential",
+        "heatmapColor": "rgba(220, 90, 90, 0.95)",
+        "insetLeftCss": 1,
+        "insetRightCss": 1,
+        "gapAfterCss": 2
+      }
+    },
+    {
+      "order": 1,
+      "binding": {
+        "key": "bid",
+        "scope": "level"
+      },
+      "weight": 1,
+      "lwcGenericFootprintSlot": {
+        "role": "heatmapCell",
+        "metricId": "bid",
+        "colorMode": "sequential",
+        "heatmapColor": "rgba(46, 160, 130, 0.95)",
+        "insetLeftCss": 1,
+        "insetRightCss": 1,
+        "gapAfterCss": 0
+      }
+    }
+  ],
+  "requiredKeys": [
+    "ask",
+    "bid"
+  ],
+  "chrome": {
+    "showPriceGrid": false,
+    "histogramShowValues": false,
+    "candleLaneVisible": true,
+    "candleLaneIndex": 1,
+    "candleStripFraction": 0.16,
+    "candleInsetLeftCss": 1,
+    "candleInsetRightCss": 1,
+    "candleGapAfterCss": 2,
+    "candleWick": "rgba(220,220,230,0.85)",
+    "candleBull": "rgba(46, 160, 130, 0.9)",
+    "candleBear": "rgba(220, 90, 90, 0.9)",
+    "candleBullStroke": "rgba(120, 220, 190, 0.55)",
+    "candleBearStroke": "rgba(255, 160, 160, 0.55)"
+  },
+  "summaries": {},
+  "poc": null,
+  "typography": {
+    "minFontPx": 8,
+    "maxFontPx": 16,
+    "minCellHeightPx": 3
+  },
+  "spacing": {
+    "barSummaryLabelGapCss": 4,
+    "barSummaryLineHeightCss": 11
+  }
+}

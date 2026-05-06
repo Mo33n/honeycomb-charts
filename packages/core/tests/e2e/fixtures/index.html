@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<script type="importmap">
+			{
+				"imports": {
+					"fancy-canvas": "/vendor/fancy-canvas/index.mjs",
+					"lightweight-charts": "/lwc.mjs"
+				}
+			}
+		</script>
+		<meta charset="UTF-8" />
+		<title>honeycomb-charts e2e harness</title>
+		<style>
+			html,
+			body {
+				margin: 0;
+			}
+			#chart {
+				width: 640px;
+				height: 400px;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="chart"></div>
+		<script type="module" src="/harness.mjs"></script>
+	</body>
+</html>

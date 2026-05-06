@@ -1,0 +1,60 @@
+{
+  "segmentPlanVersion": 1,
+  "renderPlanVersion": "1.0.0",
+  "layoutId": "desk_candle_vol_profile",
+  "engine": "genericFootprint",
+  "layoutRevision": 2521038464,
+  "themeRef": "desk_dark",
+  "columns": [
+    {
+      "order": 0,
+      "binding": {
+        "key": "vol",
+        "scope": "level"
+      },
+      "weight": 1.35,
+      "lwcGenericFootprintSlot": {
+        "role": "histogram",
+        "metricId": "vol",
+        "grow": "center",
+        "histogramColor": "rgba(129, 212, 250, 0.72)",
+        "histogramMaxFillFrac": 0.58,
+        "histogramLengthGamma": 1.45,
+        "insetLeftCss": 1,
+        "insetRightCss": 0,
+        "gapAfterCss": 0
+      }
+    }
+  ],
+  "requiredKeys": [
+    "vol"
+  ],
+  "chrome": {
+    "candleStripFraction": 0.22,
+    "showPriceGrid": true,
+    "histogramShowValues": false,
+    "candleLaneVisible": true,
+    "candleLaneIndex": 0,
+    "candleInsetLeftCss": 0,
+    "candleInsetRightCss": 1,
+    "candleGapAfterCss": 2
+  },
+  "summaries": {
+    "footer": [
+      {
+        "metricId": "vol",
+        "colorBySign": false
+      }
+    ]
+  },
+  "poc": null,
+  "typography": {
+    "minFontPx": 8,
+    "maxFontPx": 14,
+    "minCellHeightPx": 3
+  },
+  "spacing": {
+    "barSummaryLabelGapCss": 4,
+    "barSummaryLineHeightCss": 11
+  }
+}

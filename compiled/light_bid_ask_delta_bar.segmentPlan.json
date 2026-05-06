@@ -1,0 +1,81 @@
+{
+  "segmentPlanVersion": 1,
+  "renderPlanVersion": "1.0.0",
+  "layoutId": "light_bid_ask_delta_bar",
+  "engine": "genericFootprint",
+  "layoutRevision": 106343690,
+  "themeRef": null,
+  "columns": [
+    {
+      "order": 0,
+      "binding": {
+        "key": "bid",
+        "scope": "level"
+      },
+      "weight": 1,
+      "lwcGenericFootprintSlot": {
+        "role": "number",
+        "metricId": "bid",
+        "cellBackground": "rgba(36, 38, 44, 0.92)"
+      }
+    },
+    {
+      "order": 1,
+      "binding": {
+        "key": "ask",
+        "scope": "level"
+      },
+      "weight": 1,
+      "lwcGenericFootprintSlot": {
+        "role": "number",
+        "metricId": "ask",
+        "cellBackground": "rgba(32, 34, 40, 0.92)"
+      }
+    },
+    {
+      "order": 2,
+      "binding": {
+        "key": "delta",
+        "scope": "level"
+      },
+      "weight": 1.25,
+      "lwcGenericFootprintSlot": {
+        "role": "bar",
+        "metricId": "delta",
+        "barAlignMode": "positiveRightNegativeLeft",
+        "barPositiveColor": "rgba(100, 181, 246, 0.75)",
+        "barNegativeColor": "rgba(244, 143, 177, 0.78)"
+      }
+    }
+  ],
+  "requiredKeys": [
+    "ask",
+    "bid",
+    "delta",
+    "vol"
+  ],
+  "chrome": {
+    "candleStripFraction": 0.12,
+    "showPriceGrid": false,
+    "histogramShowValues": false,
+    "candleLaneVisible": true,
+    "candleLaneIndex": 2,
+    "candleInsetLeftCss": 0,
+    "candleInsetRightCss": 0,
+    "candleGapAfterCss": 0
+  },
+  "summaries": {},
+  "poc": {
+    "metricId": "vol"
+  },
+  "typography": {
+    "minFontPx": 8,
+    "maxFontPx": 12,
+    "minCellHeightPx": 4,
+    "lodOmitNumberGlyphs": false
+  },
+  "spacing": {
+    "barSummaryLabelGapCss": 4,
+    "barSummaryLineHeightCss": 11
+  }
+}
