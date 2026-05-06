@@ -2,6 +2,14 @@
   "schemaVersion": "1.0.0",
   "layouts": [
     {
+      "id": "demo_autoswitch_host",
+      "engine": "genericFootprint",
+      "artifacts": {
+        "lwcPartial": "compiled/demo_autoswitch_host.generic.partial.json",
+        "segmentPlan": "compiled/demo_autoswitch_host.segmentPlan.json"
+      }
+    },
+    {
       "id": "desk_dark_orderflow",
       "engine": "genericFootprint",
       "artifacts": {

@@ -1,6 +1,11 @@
 # Honeycomb catalog demo (CT-D03)
 
+**New here?** Start with the project overview: **[`../README.md`](../README.md)** (why Honeycomb exists, quick try path, doc map).
+
 Minimal Vite app: loads **`../config.json`**, **`../SampleData.json`**, applies **`dataContract`** aliases, and attaches the default layout with **`addHoneycombLayoutSeries`** + **`lightweight-charts`**.
+
+- **Config reference** (every top-level key, **`layouts`**, **`segmentProfiles`**, **`dataContract`**, …): **`../CONFIG.md`**
+- **Integration guide** (code examples, bindings): **`DEVELOPER.md`**
 
 ## Prerequisites (once per machine / after dependency changes)
 
@@ -50,7 +55,7 @@ Open the URL Vite prints (default **http://localhost:5190**).
 
 - Autoswitch demo page: **`http://localhost:5190/autoswitch.html`**
   - Uses `createHoneycombChartBinding` + `segmentProfiles` to auto-swap by viewport width + zoom: **zoom out** (many bars) → `desk_candle_only`; zoom in → `desk_candle_vol_profile` → **more zoom in** → `pro_max_custom`.
-  - **Zoom signal:** `raw = clientWidth × (baselineVisibleSpan / visibleLogicalSpan)` (clamped). **Uncapped** = `raw × (median Σweights over profile layouts / Σweights current layout)`. **Selector width** = `min(uncapped, perBarPx × scale)` — pure logic in **`demo/src/segment-profile-selector-width.ts`**; wiring in **`demo/src/main-autoswitch.ts`**.
+  - **`createHoneycombChartBinding`** **`viewportSegmentProfile`** option (see **`lib/chart-binding.mjs`**) attaches **`@honeycomb/charts`** viewport scaling (`preset`, `getRelayoutData`, optional `scheduleInitialReconcile`). Lower-level **`attachViewportSegmentProfile`** remains available in **`packages/core/src/viewport/`**.
   - Re-applies `setData` after each swap (new series handle per layout change).
 
 ## Notes

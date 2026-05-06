@@ -1,8 +1,7 @@
 /**
  * Pure mapping from viewport facts → CSS px for `createHoneycombChartBinding().onViewportWidthCss`.
  *
- * Contract: multiple independent “pressure” signals are combined with {@link Math.min} — the tightest
- * constraint wins. Callers supply scalars; catalog/layout specifics live outside this module.
+ * Multiple independent “pressure” signals are combined with {@link Math.min} — the tightest constraint wins.
  */
 
 export type SegmentProfileSelectorWidthInput = {
@@ -17,8 +16,7 @@ export type SegmentProfileSelectorWidthInput = {
 	/** `timeScale.getVisibleLogicalRange()` span, or null if unknown. */
 	visibleLogicalSpan: number | null;
 	/**
-	 * First positive `minWidthPx` from the segment profile’s rule list (same units as `onViewportWidthCss`).
-	 * Aligns per-bar synthetic width to that breakpoint — **no layout id required**, only rule thresholds.
+	 * First positive `minWidthPx` from the segment profile rule list (same units as `onViewportWidthCss`).
 	 */
 	detailTierMinWidthPx: number;
 	/** Logical px/bar at which per-bar synthetic width equals `detailTierMinWidthPx`. */
@@ -26,9 +24,7 @@ export type SegmentProfileSelectorWidthInput = {
 };
 
 export type SegmentProfileSelectorWidthResult = {
-	/** Value passed to `onViewportWidthCss`. */
 	selectorWidthCss: number;
-	/** Before per-bar `min`; useful for diagnostics. */
 	uncappedProfileWidthCss: number;
 	perBarPx: number | null;
 };

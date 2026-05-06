@@ -143,7 +143,29 @@
 			"ratioDenominatorId": "vol"
 		}
 	},
+	"segmentProfiles": {
+		"demo_autoswitch_profile": {
+			"hysteresisPx": 24,
+			"rules": [
+				{ "minWidthPx": 1000, "layoutId": "pro_max_custom" },
+				{ "minWidthPx": 220, "layoutId": "desk_candle_vol_profile" },
+				{ "minWidthPx": 0, "layoutId": "desk_candle_only" }
+			]
+		}
+	},
 	"layouts": [
+		{
+			"id": "demo_autoswitch_host",
+			"label": "Demo — autoswitch profile host",
+			"description": "Host-only row for segment profile based layout switching (autoswitch.html).",
+			"engine": "genericFootprint",
+			"segmentProfileRef": "demo_autoswitch_profile",
+			"segment": {
+				"chrome": { "showPriceGrid": false, "histogramShowValues": false },
+				"tracks": [{ "role": "candle" }],
+				"trackWeights": []
+			}
+		},
 		{
 			"id": "desk_dark_orderflow",
 			"label": "Desk — dark order-flow stack",

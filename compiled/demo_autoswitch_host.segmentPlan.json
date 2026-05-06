@@ -1,0 +1,37 @@
+{
+  "segmentPlanVersion": 2,
+  "renderPlanVersion": "1.0.0",
+  "layoutId": "demo_autoswitch_host",
+  "engine": "genericFootprint",
+  "layoutRevision": 708409667,
+  "themeRef": null,
+  "columns": [],
+  "requiredKeys": [],
+  "chrome": {
+    "showPriceGrid": false,
+    "histogramShowValues": false,
+    "candleLaneVisible": true,
+    "candleLaneIndex": 0
+  },
+  "summaries": {},
+  "poc": null,
+  "typography": {},
+  "spacing": {},
+  "profileSelector": {
+    "hysteresisPx": 24,
+    "rules": [
+      {
+        "minWidthPx": 0,
+        "layoutId": "desk_candle_only"
+      },
+      {
+        "minWidthPx": 620,
+        "layoutId": "desk_candle_vol_profile"
+      },
+      {
+        "minWidthPx": 1000,
+        "layoutId": "pro_max_custom"
+      }
+    ]
+  }
+}

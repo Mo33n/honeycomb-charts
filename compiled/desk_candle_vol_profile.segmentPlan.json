@@ -16,11 +16,11 @@
       "lwcGenericFootprintSlot": {
         "role": "histogram",
         "metricId": "vol",
-        "grow": "center",
+        "grow": "right",
         "histogramColor": "rgba(129, 212, 250, 0.72)",
         "histogramMaxFillFrac": 0.58,
         "histogramLengthGamma": 1.45,
-        "insetLeftCss": 1,
+        "insetLeftCss": 0,
         "insetRightCss": 0,
         "gapAfterCss": 0
       }
@@ -37,7 +37,7 @@
     "candleLaneIndex": 0,
     "candleInsetLeftCss": 0,
     "candleInsetRightCss": 1,
-    "candleGapAfterCss": 2
+    "candleGapAfterCss": 0
   },
   "summaries": {
     "footer": [

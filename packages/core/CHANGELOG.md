@@ -6,7 +6,11 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
-Nothing yet.
+### Added
+
+- **Viewport segment profiles:** `attachViewportSegmentProfile` wires resize + visible-range → `onViewportWidthCss` with zoom-density mapping, Σweights scaling, and per-bar readability floor; helpers `segmentProfileSelectorWidth`, `zoomEffectiveWidthPx`, `segmentProfileRulesForHostLayout`, `sumTrackWeightsForLayout`, `medianProfileTrackWeightFromRules`, `smallestPositiveProfileBreakpointPx`.
+- **Presets:** `ViewportSegmentProfilePresetId` (`default` \| `dense`) and `resolveViewportSegmentProfilePreset`; `attachViewportSegmentProfile` accepts `preset`, optional `scheduleInitialReconcile` (double `requestAnimationFrame` by default when enabled).
+- **`createHoneycombChartBinding`** (`lib/chart-binding.mjs`): optional **`viewportSegmentProfile`** attaches the same viewport driver (imports `@honeycomb/charts`), exposes **`detachViewport`** and **`viewport`**, and schedules initial reconcile unless **`scheduleInitialReconcile: false`**.
 
 ## [0.1.0] — 2026-05-06
 

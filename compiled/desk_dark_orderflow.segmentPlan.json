@@ -99,7 +99,7 @@
     "metricId": "vol"
   },
   "typography": {
-    "minFontPx": 8,
+    "minFontPx": 1,
     "maxFontPx": 16,
     "minCellHeightPx": 3
   },

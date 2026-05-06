@@ -2,7 +2,7 @@
 /**
  * Generates honeycomb/SampleData.json with N candles of synthetic OHLC + footprint_levels.
  * - Each open equals the previous close (continuous session).
- * - Close is a small bounded random step from open (no large gaps).
+ * - Close is a small bounded random step from open (always ≥1 tick so the body is never flat).
  * - High/low add modest wicks; footprint levels span [low, high] on a fixed tick grid.
  *
  * Usage:
@@ -305,7 +305,8 @@ async function main() {
 		const stepTicks = (() => {
 			const u = rnd();
 			if (u < 0.55) {
-				return 0;
+				// Same RNG consumption as before (one `rnd` per bar here); no doji / zero-body bars.
+				return u < 0.275 ? -1 : 1;
 			}
 			if (u < 0.82) {
 				return rnd() < 0.5 ? -1 : 1;

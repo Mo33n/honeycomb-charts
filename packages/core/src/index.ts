@@ -160,3 +160,32 @@ export type {
 	FootprintLayoutCandleChromeSnapshot,
 	BuildFootprintLayoutSnapshotInput,
 } from './export/layout-snapshot.js';
+
+export type {
+	SegmentProfileSelectorWidthInput,
+	SegmentProfileSelectorWidthResult,
+} from './viewport/segment-profile-selector-width.js';
+export { segmentProfileSelectorWidth } from './viewport/segment-profile-selector-width.js';
+
+export type { SegmentProfileRuleRow } from './viewport/catalog-layout-complexity.js';
+export {
+	sumTrackWeightsForLayout,
+	medianProfileTrackWeightFromRules,
+	smallestPositiveProfileBreakpointPx,
+} from './viewport/catalog-layout-complexity.js';
+
+export { segmentProfileRulesForHostLayout } from './viewport/raw-catalog-segment-profile.js';
+
+export type { ZoomBaselineState, DensityClamp } from './viewport/zoom-effective-width.js';
+export { zoomEffectiveWidthPx } from './viewport/zoom-effective-width.js';
+
+export type { ViewportSegmentProfilePresetId } from './viewport/viewport-segment-profile-presets.js';
+export { resolveViewportSegmentProfilePreset } from './viewport/viewport-segment-profile-presets.js';
+
+export type {
+	ViewportSegmentProfileBinding,
+	ViewportSegmentProfileSignalPayload,
+	AttachViewportSegmentProfileOptions,
+	ViewportSegmentProfileHandle,
+} from './viewport/attach-viewport-segment-profile.js';
+export { attachViewportSegmentProfile } from './viewport/attach-viewport-segment-profile.js';
