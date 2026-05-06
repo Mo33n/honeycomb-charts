@@ -150,6 +150,18 @@ The **`@honeycomb/charts`** package is released under the **Apache License 2.0**
 
 ---
 
+## Coffee
+
+Honeycomb is free to use. If it saved you time and you’d like to say thanks, you can send a tip on the **TRON (TRX)** network:
+
+```
+TAW8EQCGb1SgsSn31Wd34S57wXpoi3dx86
+```
+
+Double-check the **network** and **address** in your wallet before sending — on-chain transfers can’t be reversed.
+
+---
+
 ## Acknowledgments
 
 Honeycomb stands on the shoulders of **[Lightweight Charts](https://github.com/tradingview/lightweight-charts)** and everyone who contributes to open financial tooling. Thank you for building in public — we’re glad to add another brick to that wall.
