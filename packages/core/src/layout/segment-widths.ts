@@ -62,7 +62,9 @@ export function computeSegmentColumnWidths(input: SegmentWidthInput): SegmentWid
 			// eslint-disable-next-line no-console -- intentional dev-only perf guard (RFC §16.11 Q20)
 			console.warn(`[honeycomb-charts] Visible footprint columns clamped from ${working.length} to ${MAX_VISIBLE_COLUMNS}`);
 		}
-		working = working.slice(0, MAX_VISIBLE_COLUMNS);
+		working = [...working]
+			.sort((a, b) => weightOf(b) - weightOf(a) || (a.segment === b.segment ? a.sideIndex - b.sideIndex : a.segment === 'L' ? -1 : 1))
+			.slice(0, MAX_VISIBLE_COLUMNS);
 	}
 
 	const totalWeight = working.reduce((s, c) => s + weightOf(c), 0);

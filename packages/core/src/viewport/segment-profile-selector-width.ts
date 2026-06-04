@@ -38,7 +38,8 @@ export function segmentProfileSelectorWidth(input: SegmentProfileSelectorWidthIn
 	const perBarPx =
 		span !== null && span > 0 && Number.isFinite(span) ? input.chartWidthPx / span : null;
 
-	const perBarScale = input.detailTierMinWidthPx / input.nominalPxPerBar;
+	const nominalPxPerBar = Math.max(1, input.nominalPxPerBar);
+	const perBarScale = input.detailTierMinWidthPx / nominalPxPerBar;
 	const fromPerBar = perBarPx !== null ? perBarPx * perBarScale : uncapped;
 
 	return {

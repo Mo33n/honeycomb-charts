@@ -6,6 +6,7 @@ import { FootprintDataAdapter, type FootprintTickLike } from './footprint-data-a
 export class FootprintSeriesBinding {
 	private readonly _adapter: FootprintDataAdapter;
 	private _raf: number | null = null;
+	private _flushLoopActive = false;
 
 	public constructor(adapter?: FootprintDataAdapter) {
 		this._adapter = adapter ?? new FootprintDataAdapter();
@@ -16,10 +17,14 @@ export class FootprintSeriesBinding {
 	}
 
 	public startRafFlush(onBucket: (bucketTime: number, ticks: readonly FootprintTickLike[]) => void): void {
-		if (typeof requestAnimationFrame === 'undefined') {
+		if (typeof requestAnimationFrame === 'undefined' || this._flushLoopActive) {
 			return;
 		}
+		this._flushLoopActive = true;
 		const tick = (): void => {
+			if (!this._flushLoopActive) {
+				return;
+			}
 			this._adapter.flushAggregated(onBucket);
 			this._raf = requestAnimationFrame(tick);
 		};
@@ -27,6 +32,7 @@ export class FootprintSeriesBinding {
 	}
 
 	public destroy(): void {
+		this._flushLoopActive = false;
 		if (this._raf !== null && typeof cancelAnimationFrame !== 'undefined') {
 			cancelAnimationFrame(this._raf);
 		}

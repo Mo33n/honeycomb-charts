@@ -6,6 +6,7 @@ import {
 	defaultHoneycombSeriesOptions,
 	FootprintSeriesBinding,
 	FootprintDataAdapter,
+	defaultFootprintBarKeySeconds,
 } from 'honeycomb-charts';
 
 const el = document.getElementById('chart');
@@ -37,7 +38,7 @@ series.setData([
 
 const binding = new FootprintSeriesBinding(
 	new FootprintDataAdapter({
-		barKey: t => Math.floor(t.time / 60_000) * 60_000,
+		barKey: defaultFootprintBarKeySeconds,
 		maxUpdatesPerSecond: 120,
 	})
 );

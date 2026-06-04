@@ -17,6 +17,8 @@ export type ViewportSegmentProfileBinding = {
 	readonly profileHostLayoutId: string | null;
 	onViewportWidthCss(widthCss: number): string | null;
 	readonly series: { setData(data: unknown[]): void; data?: () => unknown[] };
+	/** Host-provided snapshot after layout swap (see chart-binding). */
+	getRelayoutData?: () => unknown[];
 };
 
 export type ViewportSegmentProfileSignalPayload = {
@@ -33,7 +35,8 @@ export type AttachViewportSegmentProfileOptions = {
 	catalog: Record<string, unknown>;
 	binding: ViewportSegmentProfileBinding;
 	/**
-	 * Data reapplied after layout swap (`setData`). Defaults to `binding.series.data()` when available.
+	 * Data reapplied after layout swap (`setData`). Defaults to `binding.getRelayoutData()` when set,
+	 * otherwise reads from the current series.
 	 */
 	getRelayoutData?: () => unknown[];
 	onViewportSignal?: (payload: ViewportSegmentProfileSignalPayload) => void;
@@ -64,6 +67,19 @@ function seriesDataOrEmpty(series: ViewportSegmentProfileBinding['series']): unk
 	return [];
 }
 
+function resolveRelayoutData(
+	binding: ViewportSegmentProfileBinding,
+	override?: () => unknown[]
+): () => unknown[] {
+	if (override !== undefined) {
+		return override;
+	}
+	if (typeof binding.getRelayoutData === 'function') {
+		return () => binding.getRelayoutData!();
+	}
+	return () => seriesDataOrEmpty(binding.series);
+}
+
 /**
  * Subscribes to resize + visible logical range, computes selector width (zoom × complexity × per-bar floor),
  * drives `binding.onViewportWidthCss`, and reapplies data after swap.
@@ -83,11 +99,7 @@ export function attachViewportSegmentProfile(options: AttachViewportSegmentProfi
 	const nominalPxPerBar = options.nominalPxPerBar ?? fromPreset.nominalPxPerBar;
 	const densityClamp = options.densityClamp ?? fromPreset.densityClamp;
 
-	const getRelayoutData =
-		options.getRelayoutData ??
-	(() => {
-		return seriesDataOrEmpty(binding.series);
-	});
+	const getRelayoutData = resolveRelayoutData(binding, options.getRelayoutData);
 
 	const rules: SegmentProfileRuleRow[] | null =
 		profileRulesOverride && profileRulesOverride.length > 0
@@ -106,6 +118,8 @@ export function attachViewportSegmentProfile(options: AttachViewportSegmentProfi
 	const detailTierMinWidthPx = smallestPositiveProfileBreakpointPx(rules);
 
 	let rafPending = false;
+	let rafId: number | null = null;
+	let detached = false;
 	const baselineState: ZoomBaselineState = { baselineVisibleSpan: null };
 
 	const getVisibleSpan = (): number | null => {
@@ -118,6 +132,9 @@ export function attachViewportSegmentProfile(options: AttachViewportSegmentProfi
 	};
 
 	const reconcileBySignal = (): void => {
+		if (detached) {
+			return;
+		}
 		const widthCss = Math.max(1, container.clientWidth);
 		const visibleSpan = getVisibleSpan();
 		const rawEffective = zoomEffectiveWidthPx(widthCss, visibleSpan, baselineState, densityClamp);
@@ -139,19 +156,29 @@ export function attachViewportSegmentProfile(options: AttachViewportSegmentProfi
 			layoutId: binding.layoutId,
 		});
 		if (next !== null) {
+			baselineState.baselineVisibleSpan = null;
 			binding.series.setData(getRelayoutData());
 		}
 	};
 
 	const schedule = (): void => {
-		if (rafPending) {
+		if (detached || rafPending || typeof requestAnimationFrame !== 'function') {
 			return;
 		}
 		rafPending = true;
-		requestAnimationFrame(() => {
+		rafId = requestAnimationFrame(() => {
 			rafPending = false;
+			rafId = null;
 			reconcileBySignal();
 		});
+	};
+
+	const cancelPendingRaf = (): void => {
+		if (rafId !== null && typeof cancelAnimationFrame === 'function') {
+			cancelAnimationFrame(rafId);
+		}
+		rafId = null;
+		rafPending = false;
 	};
 
 	const ro = new ResizeObserver(() => schedule());
@@ -162,10 +189,18 @@ export function attachViewportSegmentProfile(options: AttachViewportSegmentProfi
 
 	const handle: ViewportSegmentProfileHandle = {
 		detach: () => {
+			detached = true;
+			cancelPendingRaf();
 			ro.disconnect();
 			chart.timeScale().unsubscribeVisibleLogicalRangeChange(onVisibleRange);
 		},
-		reconcileNow: () => schedule(),
+		reconcileNow: () => {
+			if (detached) {
+				return;
+			}
+			cancelPendingRaf();
+			reconcileBySignal();
+		},
 	};
 
 	if (scheduleInitialReconcile) {

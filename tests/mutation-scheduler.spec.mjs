@@ -32,4 +32,31 @@ describe('createMutationApplyScheduler', () => {
 		assert.equal(sched.pendingCount(), 0);
 		assert.equal(/** @type {{ levels: { values: { delta: number } }[] }} */ (series._last).levels[0].values.delta, 5);
 	});
+
+	it('retries when series handle is temporarily null', async () => {
+		const rev = new Map();
+		let bars = [{ time: 1, open: 1, high: 1, low: 1, close: 1, levels: [{ price: 1, values: { delta: 0 } }] }];
+		const series = {
+			data: () => bars,
+			update(bar) {
+				const i = bars.findIndex(b => b.time === bar.time);
+				if (i >= 0) {
+					bars[i] = bar;
+				}
+			},
+		};
+		let current = /** @type {typeof series | null} */ (null);
+		const handle = { get: () => current };
+		const sched = createMutationApplyScheduler(handle, rev, {
+			maxOpsPerFrame: 8,
+			requestAnimationFrame: cb => queueMicrotask(cb),
+		});
+		sched.push(1, { ops: [{ op: 'add', path: 'levels.0.values.delta', delta: 3 }] });
+		current = series;
+		for (let n = 0; n < 20 && sched.pendingCount() > 0; n++) {
+			await new Promise(r => queueMicrotask(r));
+		}
+		assert.equal(sched.pendingCount(), 0);
+		assert.equal(bars[0].levels[0].values.delta, 3);
+	});
 });

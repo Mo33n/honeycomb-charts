@@ -2,6 +2,7 @@ import type { UTCTimestamp } from 'lightweight-charts';
 import { CrosshairMode, createChart } from 'lightweight-charts';
 
 import * as hc from '@honeycomb/charts';
+import { sanitizeEnrichedCandle } from '@honeycomb/charts';
 
 import { addHoneycombLayoutSeries } from '@honeycomb/lib/chart-binding.mjs';
 import { applyDataMapping, dataMappingFromDataContract } from '@honeycomb/lib/data-mapping.mjs';
@@ -33,16 +34,20 @@ function toEnrichedCandles(raw: { data: SampleBar[] }, mapping: ReturnType<typeo
 				throw new Error('Invalid level row');
 			}
 			const { price, ...rest } = row as Record<string, number> & { price: number };
+			if (typeof price !== 'number' || !Number.isFinite(price)) {
+				throw new Error('Invalid level price');
+			}
 			return { price, values: { ...rest } };
 		});
-		return {
+		const { candle } = sanitizeEnrichedCandle({
 			time: b.time as UTCTimestamp,
 			open: b.open as number,
 			high: b.high as number,
 			low: b.low as number,
 			close: b.close as number,
 			levels,
-		};
+		});
+		return candle;
 	});
 }
 
@@ -92,3 +97,11 @@ const layoutSource =
 meta.textContent =
 	`Layout: ${layoutId} (${layoutSource}) · ${sampleDoc.data.length} bars (SampleData.json) · ` +
 	'compile + @honeycomb/charts build required (see README).';
+
+window.addEventListener(
+	'beforeunload',
+	() => {
+		chart.remove();
+	},
+	{ once: true }
+);

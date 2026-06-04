@@ -19,7 +19,7 @@
 		"migrate:render-plan": "node ./scripts/migrate-render-plan-version.mjs",
 		"docs:dev": "npm install --prefix ./docs-site && npm run dev --prefix ./docs-site",
 		"docs:build": "npm install --prefix ./docs-site && npm run build --prefix ./docs-site",
-		"test": "node ./scripts/validate-catalog-schema.mjs && node --test ./tests/*.spec.mjs && node ./scripts/check-sample-vs-plan.mjs --all",
+		"test": "node ./scripts/validate-catalog-schema.mjs && node --test ./tests/*.spec.mjs && npm run core:test && node ./scripts/check-sample-vs-plan.mjs --all",
 		"verify:core": "npm run core:build && npm run core:test",
 		"verify:runtime": "npm run runtime:build && npm run runtime:test"
 	},

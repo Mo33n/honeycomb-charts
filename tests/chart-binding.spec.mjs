@@ -109,6 +109,31 @@ describe('createHoneycombChartBinding', () => {
 		assert.ok(next && typeof next === 'object');
 	});
 
+	it('getRelayoutData preserves series data across layout swap', async () => {
+		const hc = await import(pathToFileURL(honeycombRuntimeIndex).href);
+		const catalog = JSON.parse(await readFile(join(honeycombRoot, 'config.json'), 'utf8'));
+		const sampleBar = [{ time: 1, open: 1, high: 1, low: 1, close: 1, levels: [{ price: 1, values: { delta: 0 } }] }];
+		const chart = {
+			addCustomSeries() {
+				return {
+					_data: [],
+					data() {
+						return this._data;
+					},
+					setData(d) {
+						this._data = d;
+					},
+				};
+			},
+			removeSeries() {},
+		};
+		const b = createHoneycombChartBinding(chart, catalog, hc, 'desk_dark_delta_vol_hist');
+		b.series.setData(sampleBar);
+		b.swapLayout('desk_dark_vol_ratio_delta');
+		assert.deepEqual(b.getRelayoutData(), sampleBar);
+		assert.equal(b.series.data().length, 0);
+	});
+
 	it('onViewportWidthCss swaps via segmentPlan.profileSelector (CT-P2-11)', async () => {
 		const hc = await import(pathToFileURL(honeycombRuntimeIndex).href);
 		const catalog = {
