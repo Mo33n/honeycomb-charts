@@ -19,14 +19,54 @@ describe('FootprintDataAdapter rate (T-071)', () => {
 			calls += 1;
 		});
 		assert.equal(calls, 5);
+		assert.equal(adapter.pendingBucketCount(), 15);
+
 		tMs += 1000;
-		for (let i = 0; i < 20; i++) {
-			adapter.pushTick({ time: 100 + i, price: 2 });
-		}
 		calls = 0;
 		adapter.flushAggregated(() => {
 			calls += 1;
 		});
 		assert.equal(calls, 5);
+		assert.equal(adapter.pendingBucketCount(), 10);
+
+		tMs += 1000;
+		calls = 0;
+		adapter.flushAggregated(() => {
+			calls += 1;
+		});
+		assert.equal(calls, 5);
+		assert.equal(adapter.pendingBucketCount(), 5);
+
+		tMs += 1000;
+		calls = 0;
+		adapter.flushAggregated(() => {
+			calls += 1;
+		});
+		assert.equal(calls, 5);
+		assert.equal(adapter.pendingBucketCount(), 0);
+	});
+
+	it('drains all buckets across flushes with token refill (no tick loss)', () => {
+		let tMs = 0;
+		const adapter = new FootprintDataAdapter({
+			maxUpdatesPerSecond: 5,
+			now: () => tMs,
+			barKey: tick => tick.time,
+		});
+		for (let i = 0; i < 20; i++) {
+			adapter.pushTick({ time: 100 + i, price: 2 });
+		}
+		let sunkTicks = 0;
+		for (let round = 0; round < 10; round++) {
+			adapter.flushAggregated((_k, ticks) => {
+				sunkTicks += ticks.length;
+			});
+			if (adapter.pendingBucketCount() === 0) {
+				break;
+			}
+			tMs += 1000;
+		}
+		assert.equal(sunkTicks, 20);
+		assert.equal(adapter.pendingBucketCount(), 0);
 	});
 });

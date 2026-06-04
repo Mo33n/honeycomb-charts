@@ -23,6 +23,12 @@ describe('parseFootprintObjectId', () => {
 		assert.equal(parseFootprintObjectId('nope'), null);
 		assert.equal(parseFootprintObjectId('fp|x|1|m|L'), null);
 	});
+
+	it('decodes metric ids containing pipe characters', () => {
+		const encodedMetric = encodeURIComponent('buy|sell');
+		const p = parseFootprintObjectId(`fp|1|100|${encodedMetric}|L|ov:__cell__`);
+		assert.equal(p?.metricId, 'buy|sell');
+	});
 });
 
 describe('parseGenericFootprintObjectId', () => {

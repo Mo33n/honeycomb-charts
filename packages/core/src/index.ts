@@ -8,6 +8,7 @@ export {
 	assertFootprintReplayHasNoFutureBars,
 } from './replay/footprint-replay-data.js';
 export { sanitizeEnrichedCandle, MAX_LEVELS_PER_BAR } from './schema/sanitize.js';
+export { findLevelIndexByPrice, pricesEqual } from './schema/price-level-match.js';
 export type { SanitizeFootprintResult, SanitizeFootprintOptions } from './schema/sanitize.js';
 
 export type {
@@ -109,7 +110,7 @@ export type {
 export type { FootprintTickLike, FootprintBarKeyFn } from './pipeline/footprint-tick.js';
 export type { IFootprintDataAdapter } from './pipeline/footprint-adapter-contract.js';
 export { NoopFootprintDataAdapter } from './pipeline/footprint-adapter-contract.js';
-export { FootprintDataAdapter } from './pipeline/footprint-data-adapter.js';
+export { FootprintDataAdapter, defaultFootprintBarKeySeconds } from './pipeline/footprint-data-adapter.js';
 export type { FootprintDataAdapterOptions } from './pipeline/footprint-data-adapter.js';
 export { FootprintSeriesBinding } from './pipeline/series-binding.js';
 export {

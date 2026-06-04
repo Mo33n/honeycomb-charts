@@ -344,7 +344,7 @@ describe('compileLayoutCatalog', () => {
 	it('matches production config.json layout count', async () => {
 		const raw = JSON.parse(await readFile(join(honeycombRoot, 'config.json'), 'utf8'));
 		const r = compileLayoutCatalog(raw);
-		assert.equal(r.layouts.length, 12);
+		assert.equal(r.layouts.length, 13);
 		const ids = new Set(r.layouts.map(l => l.id));
 		assert.ok(ids.has('desk_dark_orderflow'));
 		assert.ok(ids.has('generic_binding_sequence_demo'));

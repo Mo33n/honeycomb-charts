@@ -60,4 +60,11 @@ describe('applyDataMapping', () => {
 	it('rejects non-object candle', () => {
 		assert.throws(() => applyDataMapping(null, { aliases: {} }), e => e instanceof CompileLayoutError && e.code === 'DATA_MAPPING_INVALID');
 	});
+
+	it('throws on alias target collision', () => {
+		assert.throws(
+			() => normalizeAliases({ buy_qty: 'bid', sell_qty: 'bid' }),
+			e => e instanceof CompileLayoutError && e.code === 'DATA_MAPPING_ALIAS_COLLISION'
+		);
+	});
 });

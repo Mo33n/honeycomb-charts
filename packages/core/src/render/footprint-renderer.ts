@@ -13,8 +13,8 @@ import { buildRowVerticalBands, type RowVerticalBand } from '../layout/row-geome
 import { computeFootprintColumnCssSlots, type FootprintColumnCssSlot } from '../layout/footprint-column-css-slots.js';
 import { optimalCandlestickWidth } from '../layout/optimal-column-width.js';
 import type { GenericCellOverlay } from '../generic-footprint/model.js';
-import type { HoneycombSeriesOptions } from '../options/footprint-series-options.js';
-import type { FootprintColumnDef } from '../options/footprint-series-options.js';
+import type { HoneycombSeriesOptions, FootprintColumnDef } from '../options/footprint-series-options.js';
+import { buildFootprintObjectId } from '../interaction/hit-id-codec.js';
 import type { EnrichedCandle } from '../schema/types.js';
 import { maxAbsBarMetricsVisibleWindow, normalizedBarValue } from './bar-metric-scale.js';
 import { formatNumberCellText } from './format-cell-text.js';
@@ -536,7 +536,13 @@ export class FootprintRenderer implements ICustomSeriesPaneRenderer {
 				const cxCss = (colLeft + colRight) * 0.5;
 				const cyCss = (cellTop + cellBottom) * 0.5;
 				const overlayId = topFootprintOverlayId(col.cellOverlays);
-				const objectId = `fp|${bar.time}|${band.row.price}|${col.metricId}|${slot.segment}|ov:${overlayId}`;
+				const objectId = buildFootprintObjectId({
+					logicalBarIndex: bar.time,
+					price: band.row.price,
+					metricId: col.metricId,
+					segment: slot.segment,
+					overlayId,
+				});
 				nextHits.push({
 					x1: colLeft,
 					y1: cellTop,

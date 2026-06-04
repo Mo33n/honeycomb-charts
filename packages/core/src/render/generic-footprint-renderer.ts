@@ -9,11 +9,13 @@ import type {
 	Time,
 } from 'lightweight-charts';
 
+import { buildGenericFootprintObjectId } from '../interaction/hit-id-codec.js';
 import type { GenericFootprintSlot, GenericFootprintTheme } from '../generic-footprint/model.js';
 import { buildRowVerticalBands } from '../layout/row-geometry.js';
 import { optimalCandlestickWidth } from '../layout/optimal-column-width.js';
 import type { GenericFootprintSeriesOptions } from '../options/generic-footprint-series-options.js';
 import type { EnrichedCandle, FootprintLevelRow } from '../schema/types.js';
+import { formatNumberCellText } from './format-cell-text.js';
 
 type HistogramSlot = Extract<GenericFootprintSlot, { role: 'histogram' }>;
 type NumberSlot = Extract<GenericFootprintSlot, { role: 'number' }>;
@@ -324,6 +326,14 @@ export class GenericFootprintRenderer implements ICustomSeriesPaneRenderer {
 		}
 		this._options = options;
 		this._hitCells = [];
+	}
+
+	/** Drop renderer caches (e.g. series teardown). */
+	public clearRendererState(): void {
+		this._data = null;
+		this._options = null;
+		this._hitCells = [];
+		this._layoutDependencyGeneration = 0;
 	}
 
 	public draw(
@@ -642,12 +652,24 @@ export class GenericFootprintRenderer implements ICustomSeriesPaneRenderer {
 					ctx.fillRect(bx, by, bw, bh);
 				}
 				const mId = slotPrimaryMetricId(slot);
-				const baseId = `gf|${String(logicalIndex)}|${String(row.price)}|${String(s)}|ov:__cell__|m:${mId}`;
+				const baseId = buildGenericFootprintObjectId({
+					logicalBarIndex: logicalIndex,
+					price: row.price,
+					slotIndex: s,
+					overlayId: '__cell__',
+					metricId: mId,
+				});
 				this._pushGenericHit(nextHits, slotInnerLeftCss, cellTop, slotInnerLeftCss + slotInnerW, cellBottom, baseId);
 				if (colOvs !== undefined) {
 					for (const ov of colOvs) {
 						if (ov.kind === 'cellBand') {
-							const oid = `gf|${String(logicalIndex)}|${String(row.price)}|${String(s)}|ov:${ov.id}|m:${mId}`;
+							const oid = buildGenericFootprintObjectId({
+								logicalBarIndex: logicalIndex,
+								price: row.price,
+								slotIndex: s,
+								overlayId: ov.id,
+								metricId: mId,
+							});
 							this._pushGenericHit(nextHits, slotInnerLeftCss, cellTop, slotInnerLeftCss + slotInnerW, cellBottom, oid);
 						}
 					}
@@ -873,7 +895,9 @@ export class GenericFootprintRenderer implements ICustomSeriesPaneRenderer {
 		ctx.textAlign = 'center';
 		ctx.textBaseline = 'middle';
 		ctx.fillStyle = numberSlotTextColor(theme, value, slot);
-		ctx.fillText(String(value), Math.round((x + w * 0.5) * hpr), Math.round((y0 + h * 0.5) * vpr));
+		const maxChars = Math.max(2, Math.floor(w / (fontPxCss * 0.55)));
+		const text = formatNumberCellText(value, { maxChars });
+		ctx.fillText(text, Math.round((x + w * 0.5) * hpr), Math.round((y0 + h * 0.5) * vpr));
 		ctx.restore();
 	}
 

@@ -18,4 +18,9 @@ describe('formatNumberCellText (T-031 string fixtures)', () => {
 		const s = formatNumberCellText(9.99e99, { maxChars: 4 });
 		assert.ok(s.length <= 4, s);
 	});
+
+	it('strips float noise from summed footprint volumes', () => {
+		assert.equal(formatNumberCellText(6869.5000000000001, { maxChars: 12 }), '6869.5');
+		assert.equal(formatNumberCellText(6690.000000000001, { maxChars: 12 }), '6690');
+	});
 });

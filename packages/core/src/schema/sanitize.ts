@@ -55,8 +55,10 @@ export function sanitizeEnrichedCandle<HorzScaleItem>(
 	let droppedLevels = 0;
 	if (levels.length > maxLevels) {
 		droppedLevels = levels.length - maxLevels;
+		const mid = (raw.high + raw.low) / 2;
+		levels.sort((a, b) => Math.abs(a.price - mid) - Math.abs(b.price - mid));
 		levels = levels.slice(0, maxLevels);
-		warnings.push(`Clamped levels from ${raw.levels.length} to ${maxLevels}`);
+		warnings.push(`Clamped levels from ${raw.levels.length} to ${maxLevels} (kept rows nearest OHLC mid)`);
 	}
 
 	const sanitizedLevels = levels.map(l => sanitizeLevel(l, warnings));

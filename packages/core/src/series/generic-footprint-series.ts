@@ -49,6 +49,6 @@ export class GenericFootprintSeries implements ICustomSeriesPaneView<Time, Enric
 	}
 
 	public destroy(): void {
-		void 0;
+		this._renderer.clearRendererState();
 	}
 }

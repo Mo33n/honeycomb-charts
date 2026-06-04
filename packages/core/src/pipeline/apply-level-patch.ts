@@ -3,6 +3,7 @@ import type { WhitespaceData } from 'lightweight-charts';
 
 import type { HoneycombSeriesOptions } from '../options/footprint-series-options.js';
 import type { EnrichedCandle, FootprintLevelRow } from '../schema/types.js';
+import { findLevelIndexByPrice } from '../schema/price-level-match.js';
 import { MAX_LEVELS_PER_BAR, sanitizeEnrichedCandle, type SanitizeFootprintOptions } from '../schema/sanitize.js';
 
 /**
@@ -113,7 +114,7 @@ export function applyFootprintLevelPatch<HorzScaleItem>(
 	const allowed = visibleMetricIds(series.options());
 	const levels = current.levels;
 	const price = input.price;
-	const rowIndex = levels.findIndex(r => r.price === price);
+	const rowIndex = findLevelIndexByPrice(levels, price);
 
 	const mergedValues: Record<string, number> =
 		rowIndex >= 0 ? { ...levels[rowIndex]!.values } : {};

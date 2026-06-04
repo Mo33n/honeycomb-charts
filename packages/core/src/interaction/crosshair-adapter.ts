@@ -1,3 +1,5 @@
+import { decodeHitField } from './hit-id-codec.js';
+
 export interface ParsedFootprintHit {
 	readonly logicalBarIndex: number;
 	readonly price: number;
@@ -17,13 +19,13 @@ export function parseFootprintObjectId(objectId: string): ParsedFootprintHit | n
 	}
 	const idx = Number(parts[1]);
 	const price = Number(parts[2]);
-	const metricId = parts[3] ?? '';
+	const metricId = decodeHitField(parts[3] ?? '');
 	const segment = parts[4] === 'L' || parts[4] === 'R' ? parts[4] : null;
 	const ovRaw = parts[5] ?? 'ov:__cell__';
 	if (!ovRaw.startsWith('ov:')) {
 		return null;
 	}
-	const overlayId = ovRaw.slice('ov:'.length);
+	const overlayId = decodeHitField(ovRaw.slice('ov:'.length));
 	if (
 		!Number.isFinite(idx) ||
 		!Number.isFinite(price) ||
@@ -82,8 +84,8 @@ export function parseGenericFootprintObjectId(objectId: string): ParsedGenericFo
 	if (!ovRaw.startsWith('ov:') || !mRaw.startsWith('m:')) {
 		return null;
 	}
-	const overlayId = ovRaw.slice('ov:'.length);
-	const metricId = mRaw.slice('m:'.length);
+	const overlayId = decodeHitField(ovRaw.slice('ov:'.length));
+	const metricId = decodeHitField(mRaw.slice('m:'.length));
 	if (
 		!Number.isFinite(logicalBarIndex) ||
 		!Number.isFinite(price) ||
@@ -96,6 +98,7 @@ export function parseGenericFootprintObjectId(objectId: string): ParsedGenericFo
 	return { logicalBarIndex, price, slotIndex, overlayId, metricId };
 }
 
+/** Payload for generic footprint tooltips and crosshair mirroring. */
 export interface GenericFootprintCrosshairPayload extends ParsedGenericFootprintHit {
 	readonly value?: number;
 	readonly revision?: number;
