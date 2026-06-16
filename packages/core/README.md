@@ -21,6 +21,8 @@ Footprint (order-flow style) **custom series** for [Lightweight Charts](https://
 
 See [BUILDING-HONEYCOMB.md](./BUILDING-HONEYCOMB.md).
 
+**GitHub / npm consumers:** see [PUBLISHING.md](./PUBLISHING.md) for install specifiers and subpath imports (`/chart-binding`, `/catalog`, …).
+
 ## Attribution
 
 This package is part of a fork of TradingView Lightweight Charts. Per Apache-2.0, retain `NOTICE` / license attribution and avoid implying endorsement by TradingView.

@@ -1,7 +1,7 @@
 {
 	"$schema": "./config.schema.json",
 	"schemaVersion": "1.0.0",
-	"defaultLayoutId": "pro_max_custom",
+	"defaultLayoutId": "demo_autoswitch_host",
 	"dataContract": {
 		"description": "Metric ids referenced by tracks/columns must exist on each footprint row (values) or be derivable before render.",
 		"levelValueKeys": ["bid", "ask", "vol", "delta"],

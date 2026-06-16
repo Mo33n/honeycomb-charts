@@ -21,7 +21,8 @@
 		"docs:build": "npm install --prefix ./docs-site && npm run build --prefix ./docs-site",
 		"test": "node ./scripts/validate-catalog-schema.mjs && node --test ./tests/*.spec.mjs && npm run core:test && node ./scripts/check-sample-vs-plan.mjs --all",
 		"verify:core": "npm run core:build && npm run core:test",
-		"verify:runtime": "npm run runtime:build && npm run runtime:test"
+		"verify:runtime": "npm run runtime:build && npm run runtime:test",
+		"publish:prepare": "npm run validate:catalog && npm run compile:layouts && npm run vendor:sync --prefix ./packages/core && npm run verify:pack --prefix ./packages/core"
 	},
 	"devDependencies": {
 		"ajv": "^8.20.0"

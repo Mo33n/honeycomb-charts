@@ -3,6 +3,7 @@
 node_modules/
 **/dist/
 dist/
+packages/core/vendor/
 
 # Documentation tree (author locally or publish separately)
 docs/

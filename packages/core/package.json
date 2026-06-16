@@ -1,6 +1,6 @@
 {
 	"name": "@honeycomb/charts",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"description": "Honeycomb runtime library for footprint and generic footprint rendering on Lightweight Charts.",
 	"license": "Apache-2.0",
 	"type": "module",
@@ -11,11 +11,32 @@
 		".": {
 			"types": "./dist/index.d.ts",
 			"import": "./dist/index.js"
+		},
+		"./core": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js"
+		},
+		"./chart-binding": {
+			"import": "./vendor/lib/chart-binding.mjs"
+		},
+		"./mutation-scheduler": {
+			"import": "./vendor/lib/mutation-scheduler.mjs"
+		},
+		"./data-mapping": {
+			"import": "./vendor/lib/data-mapping.mjs"
+		},
+		"./catalog": {
+			"import": "./vendor/catalog.json"
+		},
+		"./lib/*.mjs": {
+			"import": "./vendor/lib/*.mjs"
 		}
 	},
 	"files": [
 		"dist",
+		"vendor",
 		"README.md",
+		"PUBLISHING.md",
 		"BUILDING-HONEYCOMB.md",
 		"CHANGELOG.md",
 		"docs/release-checklist.md",
@@ -45,7 +66,10 @@
 		"test:memleak": "node --import tsx/esm ./scripts/memleak-smoke.ts",
 		"verify:layout-smoke": "HC_SKIP_BROWSER_PERF=1 npm run perf",
 		"verify:all": "npm run build && npm test && npm run lint && npm run test:e2e && npm run test:e2e:replay && npm run test:graphics && npm run verify:layout-smoke && npm run pack:dry",
-		"pack:dry": "npm pack --dry-run",
+		"vendor:sync": "node ./scripts/sync-vendor-for-publish.mjs",
+		"prepare": "npm run build && npm run vendor:sync",
+		"verify:pack": "npm run build && npm run vendor:sync && npm pack --dry-run",
+		"pack:dry": "npm run verify:pack",
 		"publish:dry": "npm publish --dry-run",
 		"examples:dev": "vite --config examples/vite.config.ts",
 		"examples:dev:pathb": "vite --config examples/path-b/vite.config.ts",
@@ -57,7 +81,7 @@
 		"examples:dev:generic-footprint": "vite --config examples/generic-footprint/vite.config.ts",
 		"examples:build:replay": "vite build --config examples/replay/vite.config.ts",
 		"test:e2e:replay": "node --import tsx/esm ./tests/e2e/run-replay-example-e2e.ts",
-		"prepack": "npm run build"
+		"prepack": "npm run build && npm run vendor:sync"
 	},
 	"peerDependencies": {
 		"lightweight-charts": ">=5.0.0"
@@ -86,7 +110,10 @@
 	],
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/honeycomb-charts/honeycomb.git",
-		"directory": "packages/core"
-	}
+		"url": "git+https://github.com/Mo33n/honeycomb-charts.git"
+	},
+	"bugs": {
+		"url": "https://github.com/Mo33n/honeycomb-charts/issues"
+	},
+	"homepage": "https://github.com/Mo33n/honeycomb-charts#readme"
 }
