@@ -12,9 +12,6 @@ permissions:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: packages/core
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -27,16 +24,22 @@ jobs:
           cache: npm
           cache-dependency-path: packages/core/package-lock.json
 
+      - name: Install root dev deps (catalog validator)
+        run: npm ci
+
       - name: Validate catalog
         run: npm run validate:catalog
 
       - name: Install package dependencies
+        working-directory: packages/core
         run: npm ci
 
-      - name: Build and sync vendor
+      - name: Build and verify pack
+        working-directory: packages/core
         run: npm run verify:pack
 
       - name: Publish to GitHub Packages
+        working-directory: packages/core
         run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
