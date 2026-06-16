@@ -1,6 +1,6 @@
 {
 	"name": "@mo33n/honeycomb-charts",
-	"version": "0.1.3",
+	"version": "0.1.4",
 	"description": "Honeycomb runtime library for footprint and generic footprint rendering on Lightweight Charts.",
 	"license": "Apache-2.0",
 	"type": "module",
