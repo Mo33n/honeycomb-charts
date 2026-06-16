@@ -1,86 +1,67 @@
-# Publishing `@honeycomb/charts` (npm or GitHub)
+# Publishing `@mo33n/honeycomb-charts`
 
-Installable package lives in **`packages/core`**. It ships:
+Installable package lives in **`packages/core`**.
 
-| Subpath | Contents |
-|---------|----------|
-| `@honeycomb/charts` | TypeScript runtime (`dist/`) — series, viewport, patches |
-| `@honeycomb/charts/chart-binding` | LWC layout binding (`vendor/lib/chart-binding.mjs`) |
-| `@honeycomb/charts/mutation-scheduler` | Per-frame mutation drain |
-| `@honeycomb/charts/data-mapping` | `dataContract` alias helpers |
-| `@honeycomb/charts/catalog` | Default layout catalog (`config.json`) |
+## Three ways to install (not the same thing)
 
-## Before tagging a release
+| Method | Shows in GitHub **Packages** sidebar? | Consumer spec |
+|--------|--------------------------------------|---------------|
+| **GitHub Packages (npm registry)** | **Yes** | `"@mo33n/honeycomb-charts": "0.1.2"` + `.npmrc` |
+| **Git tag + git URL** | No (only tags under Releases) | `"github:Mo33n/honeycomb-charts#v0.1.2&path:packages/core"` |
+| **npmjs.com** | No (shows on npmjs.com) | `"@honeycomb/charts": "^0.1.0"` (optional, separate) |
 
-From **`honeycomb/`** repo root:
+Pushing a git tag **does not** populate GitHub Packages. CI must run `npm publish` to `npm.pkg.github.com` (workflow: `.github/workflows/publish-github-package.yml`).
 
-```bash
-npm run validate:catalog
-npm run compile:layouts
-npm run publish:prepare
+## GitHub Packages (recommended for Trade Terminal)
+
+**Scope must match GitHub owner:** `@mo33n/honeycomb-charts` for repo `Mo33n/honeycomb-charts`.
+
+### Release steps
+
+1. Bump `version` in `packages/core/package.json`
+2. From repo root: `npm run publish:prepare`
+3. Commit, push `main`
+4. Tag and push: `git tag v0.1.2 && git push origin v0.1.2`
+5. GitHub Actions publishes to **Packages** (public)
+
+### Consumer `.npmrc` (repo root)
+
+```
+@mo33n:registry=https://npm.pkg.github.com
 ```
 
-Or from **`packages/core`**:
+For **private** packages, add `//npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}` (read:packages).
 
-```bash
-npm run verify:pack
-```
-
-## GitHub dependency (recommended for this fork)
-
-Push **`packages/core`** as the root of **`Mo33n/honeycomb-charts`** (or tag the monorepo and install with a path — see below).
-
-In consumer `package.json`:
+### Consumer `package.json`
 
 ```json
 {
   "dependencies": {
-    "@honeycomb/charts": "github:Mo33n/honeycomb-charts#v0.1.0",
+    "@mo33n/honeycomb-charts": "0.1.2",
     "lightweight-charts": "^5.2.0"
   }
 }
 ```
 
-Branches / commits:
+### Subpath exports
+
+| Import | Purpose |
+|--------|---------|
+| `@mo33n/honeycomb-charts` | Core runtime (`dist/`) |
+| `@mo33n/honeycomb-charts/chart-binding` | LWC layout binding |
+| `@mo33n/honeycomb-charts/mutation-scheduler` | Mutation scheduler |
+| `@mo33n/honeycomb-charts/catalog` | Default layout catalog |
+
+## Git dependency (fallback, no Packages UI)
 
 ```json
-"@honeycomb/charts": "github:Mo33n/honeycomb-charts#main"
-"@honeycomb/charts": "github:Mo33n/honeycomb-charts#abc1234"
+"@mo33n/honeycomb-charts": "github:Mo33n/honeycomb-charts#v0.1.2&path:packages/core"
 ```
 
-**pnpm** can install from a subdirectory of a monorepo without republishing:
+Runs `prepare` on install (build + vendor sync). Slower first install.
+
+## Local mono-repo dev
 
 ```json
-"@honeycomb/charts": "github:Mo33n/honeycomb#v0.1.0&path:honeycomb/packages/core"
+"@mo33n/honeycomb-charts": "file:../../../honeycomb/packages/core"
 ```
-
-On `pnpm install`, npm runs **`prepare`**: `tsc` build + `vendor:sync` (copies `lib/` + `config.json`). Requires **Node ≥ 22.3**.
-
-## npm registry (optional)
-
-```bash
-cd packages/core
-npm login
-npm publish --access public
-```
-
-## Consumer imports (Trade Terminal / Nuxt)
-
-Remove Vite aliases to sibling `../honeycomb/` and import:
-
-```ts
-import * as hc from '@honeycomb/charts';
-import { createHoneycombChartBinding } from '@honeycomb/charts/chart-binding';
-import { createMutationApplyScheduler } from '@honeycomb/charts/mutation-scheduler';
-import catalog from '@honeycomb/charts/catalog';
-```
-
-Legacy demo alias `@honeycomb/lib/chart-binding.mjs` maps to `@honeycomb/charts/lib/chart-binding.mjs`.
-
-## Release checklist
-
-1. Bump `version` in `packages/core/package.json`
-2. `npm run publish:prepare` (from `honeycomb/`)
-3. `npm run verify:pack` (from `packages/core`)
-4. Commit, tag `vX.Y.Z`, push tag
-5. Consumers pin `#vX.Y.Z` on GitHub or semver on npm

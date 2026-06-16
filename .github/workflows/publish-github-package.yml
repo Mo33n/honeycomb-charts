@@ -1,0 +1,42 @@
+name: Publish GitHub Package
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/core
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          registry-url: https://npm.pkg.github.com
+          cache: npm
+          cache-dependency-path: packages/core/package-lock.json
+
+      - name: Validate catalog
+        run: npm run validate:catalog
+
+      - name: Install package dependencies
+        run: npm ci
+
+      - name: Build and sync vendor
+        run: npm run verify:pack
+
+      - name: Publish to GitHub Packages
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
